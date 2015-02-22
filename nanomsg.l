@@ -63,12 +63,12 @@
   (let Sock (nn-socket "AF_SP" Type)
     (if (= -1 Sock)
         (exit-with-error)
-        (let Sockid
+        (let Endpoint
           (cond ((= Type "NN_REP") (nn-bind Sock Addr))
                 ((= Type "NN_REQ") (nn-connect Sock Addr)) )
-          (cond ((not Sockid)  (exit-with-error))
-                ((= -1 Sockid) (exit-with-error)) )
-          (cons Sock Sockid) ]
+          (cond ((not Endpoint)  (exit-with-error))
+                ((= -1 Endpoint) (exit-with-error)) )
+          (cons Sock Endpoint) ]
 
 # public
 (de rep-bind (Addr)
