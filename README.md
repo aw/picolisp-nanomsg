@@ -48,6 +48,8 @@ All functions are publicly accessible and namespaced with `nanomsg` (or the pref
   * `unsubscribe`: unsubscribe from a `PUB/SUB` topic
   * `pair-bind`: bind to a `PAIR` socket (inproc, ipc, tcp)
   * `pair-connect`: connect to a `PAIR` socket (inproc, ipc, tcp)
+  * `pull-bind`: bind to a `PULL` socket (inproc, ipc, tcp)
+  * `push-connect`: connect to a `PUSH` socket (inproc, ipc, tcp)
 
 # Example (REQ/REP)
 
