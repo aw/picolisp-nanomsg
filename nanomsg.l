@@ -59,7 +59,7 @@
 (de exit-with-error ()
   (let Error (nn-strerror (nn-errno)) (prinl "ERROR: " Error) (bye 1)) )
 
-[de make-socket (Addr Type)
+[de make-socket (Addr Type Flag)
   (let Sock (nn-socket "AF_SP" Type)
     (if (= -1 Sock)
         (exit-with-error)
@@ -67,7 +67,8 @@
           (cond ((= Type "NN_REP") (nn-bind Sock Addr))
                 ((= Type "NN_REQ") (nn-connect Sock Addr))
                 ((= Type "NN_PUB") (nn-bind Sock Addr))
-                ((= Type "NN_SUB") (nn-connect Sock Addr)) )
+                ((= Type "NN_SUB") (nn-connect Sock Addr))
+                ((= Type "NN_PAIR") (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
           (cond ((not Endpoint)  (exit-with-error))
                 ((= -1 Endpoint) (exit-with-error)) )
           (cons Sock Endpoint) ]
@@ -80,19 +81,38 @@
           ((= -1 Result) (exit-with-error)) )
     Result ]
 
-# public
+
+# public REQ/REP
 (de rep-bind (Addr)
   (make-socket Addr "NN_REP") )
 
 (de req-connect (Addr)
   (make-socket Addr "NN_REQ") )
 
+
+# public PUB/SUB
 (de pub-bind (Addr)
   (make-socket Addr "NN_PUB") )
 
 (de sub-connect (Addr)
   (make-socket Addr "NN_SUB") )
 
+(de subscribe (Sock Topic)
+  (sub-unsub Sock Topic "NN_SUB_SUBSCRIBE") )
+
+(de unsubscribe (Sock Topic)
+  (sub-unsub Sock Topic "NN_SUB_UNSUBSCRIBE") )
+
+
+# public PAIR
+(de pair-bind (Addr)
+  (make-socket Addr "NN_PAIR" "BIND") )
+
+(de pair-connect (Addr)
+  (make-socket Addr "NN_PAIR") )
+
+
+# public generic
 [de end-sock (Sockpair)
   (nn-shutdown (car Sockpair) (cdr Sockpair))
   (nn-close (car Sockpair)) ]
@@ -106,9 +126,3 @@
 [de msg-send (Sock Msg)
   (let Result (nn-send Sock Msg (size Msg) 0)
     (when (= -1 Result) (exit-with-error)) ]
-
-(de subscribe (Sock Topic)
-  (sub-unsub Sock Topic "NN_SUB_SUBSCRIBE") )
-
-(de unsubscribe (Sock Topic)
-  (sub-unsub Sock Topic "NN_SUB_UNSUBSCRIBE") )

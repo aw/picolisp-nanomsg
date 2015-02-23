@@ -2,14 +2,16 @@
 
 [Nanomsg](http://nanomsg.org/index.html) FFI binding for [PicoLisp](http://picolisp.com/).
 
-**WARNING:** This binding, like Nanomsg, is in beta and currently supports the following protocols:
+**WARNING:** This binding, like Nanomsg, is in beta and supports the following protocols:
 
   * `REQ/REP`
   * `PUB/SUB`
+  * `PAIR`
+  * `PUSH/PULL (PIPELINE)`
 
 # Version
 
-**v0.5.2** (uses Nanomsg _v0.5_)
+**v0.5.3** (uses Nanomsg _v0.5_)
 
 # Requirements
 
@@ -44,6 +46,8 @@ All functions are publicly accessible and namespaced with `nanomsg` (or the pref
   * `msg-send`: send a message
   * `subscribe`: subscribe to a `PUB/SUB` topic
   * `unsubscribe`: unsubscribe from a `PUB/SUB` topic
+  * `pair-bind`: bind to a `PAIR` socket (inproc, ipc, tcp)
+  * `pair-connect`: connect to a `PAIR` socket (inproc, ipc, tcp)
 
 # Example (REQ/REP)
 
@@ -53,16 +57,14 @@ All functions are publicly accessible and namespaced with `nanomsg` (or the pref
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
-
 (unless (fork)
   (let Sockpair
-    (rep-bind "tcp://127.0.0.1:5560")
+    (nanomsg~rep-bind "tcp://127.0.0.1:5560")
 
-    (prinl (msg-recv (car Sockpair)))
-    (msg-send (car Sockpair) "Yep I can see it!")
+    (prinl (nanomsg~msg-recv (car Sockpair)))
+    (nanomsg~msg-send (car Sockpair) "Yep I can see it!")
 
-    (end-sock Sockpair) )
+    (nanomsg~end-sock Sockpair) )
 
   (bye) )
 
@@ -115,6 +117,38 @@ pil +
   (nanomsg~pub-bind "tcp://127.0.0.1:5560")
   (while T (nanomsg~msg-send (car Sockpair) "test Hello World!"))
   (nanomsg~end-sock Sockpair) )
+```
+
+# Example (PAIR)
+
+## Server
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(unless (fork)
+  (let Sockpair
+    (nanomsg~pair-connect "tcp://127.0.0.1:5560")
+    (prinl (nanomsg~msg-recv (car Sockpair)))
+    (nanomsg~end-sock Sockpair) )
+  (bye) )
+
+# => Hello World!
+```
+
+## Client
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(unless (fork)
+  (let Sockpair
+    (nanomsg~pair-bind "tcp://127.0.0.1:5560")
+    (prinl (nanomsg~msg-send (car Sockpair) "Hello World!"))
+    (nanomsg~end-sock Sockpair) )
+  (bye) )
 ```
 
 # Receive buffer size
