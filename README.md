@@ -2,11 +2,14 @@
 
 [Nanomsg](http://nanomsg.org/index.html) FFI binding for [PicoLisp](http://picolisp.com/).
 
-**WARNING:** This binding, like Nanomsg, is in beta and currently only supports the `REQ/REP` protocols.
+**WARNING:** This binding, like Nanomsg, is in beta and currently supports the following protocols:
+
+  * `REQ/REP`
+  * `PUB/SUB`
 
 # Version
 
-**v0.5.1** (uses Nanomsg _v0.5_)
+**v0.5.2** (uses Nanomsg _v0.5_)
 
 # Requirements
 
@@ -34,9 +37,13 @@ All functions are publicly accessible and prefixed with `nanomsg~`, but only the
 
   * `rep-bind`: bind a `REP` socket (inproc, ipc, tcp)
   * `req-connect`: connect to a `REQ` socket (inproc, ipc, tcp)
+  * `pub-bind`: connect to a `PUB` socket (inproc, ipc, tcp)
+  * `sub-connect`: connect to a `SUB` socket (inproc, ipc, tcp)
   * `end-sock`: shutdown and close a socket
   * `msg-recv`: receive a message
   * `msg-send`: send a message
+  * `subscribe`: subscribe to a `PUB/SUB` topic
+  * `unsubscribe`: unsubscribe from a `PUB/SUB` topic
 
 # Example (REQ/REP)
 
@@ -74,6 +81,35 @@ pil +
 => Yep I can see it!
 ```
 
+# Example (PUB/SUB)
+
+## Server
+
+```lisp
+pil +
+(load "nanomsg.lo")
+
+(unless (fork)
+  (let Sockpair
+    (nanomsg~sub-connect "tcp://127.0.0.1:5560")
+    (nanomsg~subscribe (car Sockpair) "test")
+    (while T (prinl "RECEIVED: " (nanomsg~msg-recv (car Sockpair))) (wait 1000 (nanomsg~unsubscribe 0 "test")))
+    (nanomsg~end-sock Sockpair) )
+  (bye) )
+```
+
+## Client
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(let Sockpair
+  (nanomsg~pub-bind "tcp://127.0.0.1:5560")
+  (while T (nanomsg~msg-send (car Sockpair) "test Hello World!"))
+  (nanomsg~end-sock Sockpair) )
+```
+
 # Receive buffer size
 
 A fixed amount of memory is allocated for each receive buffer. The default setting is `8192` Bytes (8 KiB).
@@ -82,7 +118,7 @@ This can be changed with the environment variable `NANOMSG_MAX_SIZE`. You can al
 
 # TODO:
 
-  * Implement missing protocols (pub/sub, survey, push/pull, pair)
+  * Implement missing protocols (survey, push/pull, pair)
 
 # Contributing
 

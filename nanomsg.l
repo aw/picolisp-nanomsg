@@ -18,7 +18,7 @@
   (native `*Nanomsg "nn_close" 'I Sock) )
 
 (de nn-setsockopt (Sock Level Option Optval Length)
-  (native `*Nanomsg "nn_setsockopt" 'I Sock Level Option Optval Length) )
+  (native `*Nanomsg "nn_setsockopt" 'I Sock (symbol-val Level) (symbol-val Option) Optval Length) )
 
 (de nn-bind (Sock Addr)
   (native `*Nanomsg "nn_bind" 'I Sock Addr) )
@@ -59,23 +59,39 @@
 (de exit-with-error ()
   (let Error (nn-strerror (nn-errno)) (prinl "ERROR: " Error) (bye 1)) )
 
-[de req-rep (Addr Type)
+[de make-socket (Addr Type)
   (let Sock (nn-socket "AF_SP" Type)
     (if (= -1 Sock)
         (exit-with-error)
         (let Endpoint
           (cond ((= Type "NN_REP") (nn-bind Sock Addr))
-                ((= Type "NN_REQ") (nn-connect Sock Addr)) )
+                ((= Type "NN_REQ") (nn-connect Sock Addr))
+                ((= Type "NN_PUB") (nn-bind Sock Addr))
+                ((= Type "NN_SUB") (nn-connect Sock Addr)) )
           (cond ((not Endpoint)  (exit-with-error))
                 ((= -1 Endpoint) (exit-with-error)) )
           (cons Sock Endpoint) ]
 
+[de sub-unsub (Sock Topic Type)
+  (let Result
+    (cond ((= Type "NN_SUB_SUBSCRIBE")   (nn-setsockopt Sock "NN_SUB" Type Topic (size Topic)))
+          ((= Type "NN_SUB_UNSUBSCRIBE") (nn-setsockopt Sock "NN_SUB" Type Topic (size Topic))) )
+    (cond ((not Result)  (exit-with-error))
+          ((= -1 Result) (exit-with-error)) )
+    Result ]
+
 # public
 (de rep-bind (Addr)
-  (req-rep Addr "NN_REP") )
+  (make-socket Addr "NN_REP") )
 
 (de req-connect (Addr)
-  (req-rep Addr "NN_REQ") )
+  (make-socket Addr "NN_REQ") )
+
+(de pub-bind (Addr)
+  (make-socket Addr "NN_PUB") )
+
+(de sub-connect (Addr)
+  (make-socket Addr "NN_SUB") )
 
 [de end-sock (Sockpair)
   (nn-shutdown (car Sockpair) (cdr Sockpair))
@@ -90,3 +106,9 @@
 [de msg-send (Sock Msg)
   (let Result (nn-send Sock Msg (size Msg) 0)
     (when (= -1 Result) (exit-with-error)) ]
+
+(de subscribe (Sock Topic)
+  (sub-unsub Sock Topic "NN_SUB_SUBSCRIBE") )
+
+(de unsubscribe (Sock Topic)
+  (sub-unsub Sock Topic "NN_SUB_UNSUBSCRIBE") )
