@@ -11,7 +11,7 @@
 
 # Version
 
-**v0.5.3** (uses Nanomsg _v0.5_)
+**v0.5.4** (uses Nanomsg _v0.5_)
 
 # Requirements
 
@@ -151,6 +151,38 @@ pil +
   (bye) )
 ```
 
+# Example (PUSH/PULL) - PIPELINE
+
+## Server
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(unless (fork)
+  (let Sockpair
+    (nanomsg~pull-bind "tcp://127.0.0.1:5560")
+    (prinl (nanomsg~msg-recv (car Sockpair)))
+    (nanomsg~end-sock Sockpair) )
+  (bye) )
+
+# => Hello Pipeline
+```
+
+## Client
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(unless (fork)
+  (let Sockpair
+    (nanomsg~push-connect "tcp://127.0.0.1:5560")
+    (prinl (nanomsg~msg-send (car Sockpair) "Hello Pipeline"))
+    (nanomsg~end-sock Sockpair) )
+  (bye) )
+```
+
 # Receive buffer size
 
 A fixed amount of memory is allocated for each receive buffer. The default setting is `8192` Bytes (8 KiB).
@@ -159,7 +191,7 @@ This can be changed with the environment variable `NANOMSG_MAX_SIZE`. You can al
 
 # TODO:
 
-  * Implement missing protocols (survey, push/pull, pair)
+  * Implement missing protocols (survey, bus)
 
 # Contributing
 

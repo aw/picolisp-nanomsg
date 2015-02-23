@@ -69,6 +69,8 @@
                 ((= Type "NN_PUB") (nn-bind Sock Addr))
                 ((= Type "NN_SUB") (nn-connect Sock Addr))
                 ((= Type "NN_PAIR") (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
+                ((= Type "NN_PULL") (nn-bind Sock Addr))
+                ((= Type "NN_PUSH") (nn-connect Sock Addr)) )
           (cond ((not Endpoint)  (exit-with-error))
                 ((= -1 Endpoint) (exit-with-error)) )
           (cons Sock Endpoint) ]
@@ -110,6 +112,14 @@
 
 (de pair-connect (Addr)
   (make-socket Addr "NN_PAIR") )
+
+
+# public PUSH/PULL (PIPELINE)
+(de pull-bind (Addr)
+  (make-socket Addr "NN_PULL") )
+
+(de push-connect (Addr)
+  (make-socket Addr "NN_PUSH") )
 
 
 # public generic
