@@ -33,11 +33,11 @@ The `nanomsg.l` file searches for `lib/libnanomsg.so`, relative to its current d
 
 # Usage
 
-All functions are publicly accessible and prefixed with `nanomsg~`, but only the following are necessary:
+All functions are publicly accessible and namespaced with `nanomsg` (or the prefix: `nanomsg~`), but only the following are necessary:
 
   * `rep-bind`: bind a `REP` socket (inproc, ipc, tcp)
   * `req-connect`: connect to a `REQ` socket (inproc, ipc, tcp)
-  * `pub-bind`: connect to a `PUB` socket (inproc, ipc, tcp)
+  * `pub-bind`: bind to a `PUB` socket (inproc, ipc, tcp)
   * `sub-connect`: connect to a `SUB` socket (inproc, ipc, tcp)
   * `end-sock`: shutdown and close a socket
   * `msg-recv`: receive a message
@@ -53,15 +53,20 @@ All functions are publicly accessible and prefixed with `nanomsg~`, but only the
 pil +
 (load "nanomsg.l")
 
+(symbols 'nanomsg)
+
 (unless (fork)
   (let Sockpair
-    (nanomsg~rep-bind "tcp://127.0.0.1:5560")
-    (prinl (nanomsg~msg-recv (car Sockpair)))
-    (nanomsg~msg-send (car Sockpair) "Yep I can see it!")
-    (nanomsg~end-sock Sockpair) )
+    (rep-bind "tcp://127.0.0.1:5560")
+
+    (prinl (msg-recv (car Sockpair)))
+    (msg-send (car Sockpair) "Yep I can see it!")
+
+    (end-sock Sockpair) )
+
   (bye) )
 
-=> Can you see this?
+# => Can you see this?
 ```
 
 ## Client
@@ -78,7 +83,7 @@ pil +
     (nanomsg~end-sock Sockpair) )
   (bye) )
 
-=> Yep I can see it!
+# => Yep I can see it!
 ```
 
 # Example (PUB/SUB)
@@ -96,6 +101,8 @@ pil +
     (while T (prinl "RECEIVED: " (nanomsg~msg-recv (car Sockpair))) (wait 1000 (nanomsg~unsubscribe 0 "test")))
     (nanomsg~end-sock Sockpair) )
   (bye) )
+
+# => RECEIVED: test Hello World!
 ```
 
 ## Client
