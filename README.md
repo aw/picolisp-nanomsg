@@ -6,7 +6,7 @@
 
 # Version
 
-**v0.5.0** (uses Nanomsg _v0.5_)
+**v0.5.1** (uses Nanomsg _v0.5_)
 
 # Requirements
 

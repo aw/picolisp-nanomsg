@@ -85,7 +85,7 @@
   (let Result (nn-recv Sock '(`MSG_MAX_SIZE B . `MSG_MAX_SIZE) MSG_MAX_SIZE 0)
     (if (= -1 (car Result))
         (exit-with-error)
-        (pack (mapcar char (cdr Result))) ]
+        (pack (mapcar char (filter n0 (cdr Result)))) ]
 
 [de msg-send (Sock Msg)
   (let Result (nn-send Sock Msg (size Msg) 0)
