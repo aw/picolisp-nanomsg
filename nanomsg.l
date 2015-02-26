@@ -20,6 +20,12 @@
 (de nn-setsockopt (Sock Level Option Optval Length)
   (native `*Nanomsg "nn_setsockopt" 'I Sock (symbol-val Level) (symbol-val Option) Optval Length) )
 
+# Set Length to NIL and nn_getsockopt will automatically calculate the correct size
+# returns the result of the call in 'car', value of &buf in 'cdr'
+(de nn-getsockopt (Sock Level Option &buf Length)
+  (use Buf
+    (cons (native `*Nanomsg "nn_getsockopt" 'I Sock (symbol-val Level) (symbol-val Option) (list 'Buf &buf . 0) Length) Buf) ) )
+
 (de nn-bind (Sock Addr)
   (native `*Nanomsg "nn_bind" 'I Sock Addr) )
 
