@@ -133,12 +133,26 @@
   (nn-shutdown (car Sockpair) (cdr Sockpair))
   (nn-close (car Sockpair)) ]
 
-[de msg-recv (Sock)
-  (let Result (nn-recv Sock '(`MSG_MAX_SIZE B . `MSG_MAX_SIZE) MSG_MAX_SIZE 0)
-    (if (= -1 (car Result))
-        (exit-with-error)
-        (pack (mapcar char (head (car Result) (cdr Result)))) ]
+[de msg-recv (Sock Dontwait)
+  (let Result (nn-recv Sock
+                       '(`MSG_MAX_SIZE B . `MSG_MAX_SIZE)
+                       MSG_MAX_SIZE
+                       (when (bool Dontwait) (symbol-val "NN_DONTWAIT")) )
+      (cond ((and (bool Dontwait)
+                  (= -1 (car Result))
+                  (= (nn-errno) (symbol-val "EAGAIN")) )
+              NIL )
+            ((= -1 (car Result)) (exit-with-error))
+            (T (pack (mapcar char (head (car Result) (cdr Result))))) ]
 
-[de msg-send (Sock Msg)
-  (let Result (nn-send Sock Msg (size Msg) 0)
-    (when (= -1 Result) (exit-with-error)) ]
+[de msg-send (Sock Msg Dontwait)
+  (let Result (nn-send Sock
+                       Msg
+                       (size Msg)
+                       (when (bool Dontwait) (symbol-val "NN_DONTWAIT")) )
+    (cond ((and (bool Dontwait)
+                (= -1 Result)
+                (= (nn-errno) (symbol-val "EAGAIN")) )
+            NIL )
+          ((= -1 Result) (exit-with-error)) ]
+

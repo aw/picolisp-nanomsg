@@ -11,7 +11,7 @@
 
 # Version
 
-**v0.5.5** (uses Nanomsg _v0.5_)
+**v0.5.6** (uses Nanomsg _v0.5_)
 
 # Requirements
 
@@ -42,8 +42,8 @@ All functions are publicly accessible and namespaced with `(symbols 'nanomsg)` (
   * `pub-bind`: bind to a `PUB` socket (inproc, ipc, tcp)
   * `sub-connect`: connect to a `SUB` socket (inproc, ipc, tcp)
   * `end-sock`: shutdown and close a socket
-  * `msg-recv`: receive a message
-  * `msg-send`: send a message
+  * `msg-recv`: receive a message (blocking/non-blocking)
+  * `msg-send`: send a message (blocking/non-blocking)
   * `subscribe`: subscribe to a `PUB/SUB` topic
   * `unsubscribe`: unsubscribe from a `PUB/SUB` topic
   * `pair-bind`: bind to a `PAIR` socket (inproc, ipc, tcp)
@@ -64,7 +64,7 @@ pil +
     (nanomsg~rep-bind "tcp://127.0.0.1:5560")
 
     (prinl (nanomsg~msg-recv (car Sockpair)))
-    (nanomsg~msg-send (car Sockpair) "Yep I can see it!")
+    (nanomsg~msg-send (car Sockpair) "Yep I can see it!" T) # non-blocking
 
     (nanomsg~end-sock Sockpair) )
 
@@ -183,6 +183,19 @@ pil +
     (prinl (nanomsg~msg-send (car Sockpair) "Hello Pipeline"))
     (nanomsg~end-sock Sockpair) )
   (bye) )
+```
+
+# Non-blocking I/O
+
+Some situations require non-blocking I/O. You can call `msg-recv` or `msg-send` with a last argument `T` to enable non-blocking mode. Be aware `NIL` will be returned if `EAGAIN` is received during a non-blocking call. You need to manually poll/loop over the socket in this situation.
+
+Usage example:
+
+```lisp
+...
+(let Msg (msg-recv (car Sockpair) T)
+  (when Msg (fifo '*Messages Msg)) )
+...
 ```
 
 # Receive buffer size
