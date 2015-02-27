@@ -52,6 +52,11 @@
 (de nn-symbol (Index &value)
   (native `*Nanomsg "nn_symbol" 'S Index &value) )
 
+# returns the number of 'nn_pollfds' structures in 'car', results in 'cdr'
+(de nn-poll (&fds Nfds Timeout)
+  (use Fds
+    (cons (native `*Nanomsg "nn_poll" 'I (list 'Fds &fds) Nfds Timeout) Fds) ) )
+
 # WARNING: only polls 1 file descriptor specified by Sockfd
 #          Level-triggered (single-threaded) only (i.e: does not support EPOLLET|EPOLLONESHOT)
 # returns the number of 'nn_pollfds' structures (0 or 1)
