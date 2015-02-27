@@ -52,6 +52,12 @@
 (de nn-symbol (Index &value)
   (native `*Nanomsg "nn_symbol" 'S Index &value) )
 
+# WARNING: only polls 1 file descriptor specified by Sockfd
+#          Level-triggered (single-threaded) only (i.e: does not support EPOLLET|EPOLLONESHOT)
+# returns the number of 'nn_pollfds' structures (0 or 1)
+(de nn-poll-lt-1 (Sockfd Nfds Timeout)
+  (native `*Nanomsg "nn_poll" 'I (list 'NIL (8 (B B B B I)) (0 . 2) (0 . 2) (- Sockfd)) Nfds Timeout) )
+
 # internal
 [setq NN_Symbols
   (let (Index -1 P)
