@@ -11,7 +11,7 @@
 
 # Version
 
-**v0.5.4** (uses Nanomsg _v0.5_)
+**v0.5.5** (uses Nanomsg _v0.5_)
 
 # Requirements
 
@@ -35,7 +35,7 @@ The `nanomsg.l` file searches for `lib/libnanomsg.so`, relative to its current d
 
 # Usage
 
-All functions are publicly accessible and namespaced with `nanomsg` (or the prefix: `nanomsg~`), but only the following are necessary:
+All functions are publicly accessible and namespaced with `(symbols 'nanomsg)` (or the prefix: `nanomsg~`), but only the following are necessary:
 
   * `rep-bind`: bind a `REP` socket (inproc, ipc, tcp)
   * `req-connect`: connect to a `REQ` socket (inproc, ipc, tcp)
