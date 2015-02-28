@@ -76,6 +76,13 @@
 (de exit-with-error ()
   (let Error (nn-strerror (nn-errno)) (prinl "ERROR: " Error) (bye 1)) )
 
+[de exit-with-error-maybe (Dontwait Result)
+  (cond ((and (bool Dontwait)
+              (= -1 Result)
+              (= (nn-errno) (symbol-val "EAGAIN")) )
+        T )
+        ((= -1 Result) (exit-with-error)) ]
+
 [de make-socket (Addr Type Flag)
   (let Sock (nn-socket "AF_SP" Type)
     (if (= -1 Sock)
@@ -99,6 +106,9 @@
     (cond ((not Result)  (exit-with-error))
           ((= -1 Result) (exit-with-error)) )
     Result ]
+
+(de non-blocking-io (Dontwait)
+   (when (bool Dontwait) (symbol-val "NN_DONTWAIT")) )
 
 
 # public REQ/REP
@@ -145,25 +155,11 @@
   (nn-close (car Sockpair)) ]
 
 [de msg-recv (Sock Dontwait)
-  (let Result (nn-recv Sock
-                       '(`MSG_MAX_SIZE B . `MSG_MAX_SIZE)
-                       MSG_MAX_SIZE
-                       (when (bool Dontwait) (symbol-val "NN_DONTWAIT")) )
-      (cond ((and (bool Dontwait)
-                  (= -1 (car Result))
-                  (= (nn-errno) (symbol-val "EAGAIN")) )
-              NIL )
-            ((= -1 (car Result)) (exit-with-error))
-            (T (pack (mapcar char (head (car Result) (cdr Result))))) ]
+  (let Result (nn-recv Sock '(`MSG_MAX_SIZE B . `MSG_MAX_SIZE) MSG_MAX_SIZE (non-blocking-io Dontwait) )
+      (unless (exit-with-error-maybe Dontwait Result)
+      (pack (mapcar char (head (car Result) (cdr Result)))) ]
 
 [de msg-send (Sock Msg Dontwait)
-  (let Result (nn-send Sock
-                       Msg
-                       (size Msg)
-                       (when (bool Dontwait) (symbol-val "NN_DONTWAIT")) )
-    (cond ((and (bool Dontwait)
-                (= -1 Result)
-                (= (nn-errno) (symbol-val "EAGAIN")) )
-            NIL )
-          ((= -1 Result) (exit-with-error)) ]
+  (let Result (nn-send Sock Msg (size Msg) (non-blocking-io Dontwait) )
+    (exit-with-error-maybe Dontwait Result) ]
 
