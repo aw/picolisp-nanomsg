@@ -57,6 +57,9 @@
   (use Fds
     (cons (native `*Nanomsg "nn_poll" 'I (list 'Fds &fds) Nfds Timeout) Fds) ) )
 
+(de nn-device (Sock1 Sock2)
+  (native `*Nanomsg "nn_device" 'I Sock1 Sock2) )
+
 # WARNING: only polls 1 file descriptor specified by Sockfd
 #          Level-triggered (single-threaded) only (i.e: does not support EPOLLET|EPOLLONESHOT)
 # returns the number of 'nn_pollfds' structures (0 or 1)
@@ -83,8 +86,8 @@
         T )
         ((= -1 Result) (exit-with-error)) ]
 
-[de make-socket (Addr Type Flag)
-  (let Sock (nn-socket "AF_SP" Type)
+[de make-socket (Addr Type Flag Domain)
+  (let Sock (nn-socket (if Domain Domain "AF_SP") Type)
     (if (= -1 Sock)
         (exit-with-error)
         (let Endpoint
@@ -112,19 +115,19 @@
 
 
 # public REQ/REP
-(de rep-bind (Addr)
-  (make-socket Addr "NN_REP") )
+(de rep-bind (Addr Domain)
+  (make-socket Addr "NN_REP" NIL Domain) )
 
-(de req-connect (Addr)
-  (make-socket Addr "NN_REQ") )
+(de req-connect (Addr Domain)
+  (make-socket Addr "NN_REQ" NIL Domain) )
 
 
 # public PUB/SUB
-(de pub-bind (Addr)
-  (make-socket Addr "NN_PUB") )
+(de pub-bind (Addr Domain)
+  (make-socket Addr "NN_PUB" NIL Domain) )
 
-(de sub-connect (Addr)
-  (make-socket Addr "NN_SUB") )
+(de sub-connect (Addr Domain)
+  (make-socket Addr "NN_SUB" NIL Domain) )
 
 (de subscribe (Sock Topic)
   (sub-unsub Sock Topic "NN_SUB_SUBSCRIBE") )
@@ -134,19 +137,19 @@
 
 
 # public PAIR
-(de pair-bind (Addr)
-  (make-socket Addr "NN_PAIR" "BIND") )
+(de pair-bind (Addr Domain)
+  (make-socket Addr "NN_PAIR" "BIND" Domain) )
 
-(de pair-connect (Addr)
-  (make-socket Addr "NN_PAIR") )
+(de pair-connect (Addr Domain)
+  (make-socket Addr "NN_PAIR" Domain) )
 
 
 # public PUSH/PULL (PIPELINE)
-(de pull-bind (Addr)
-  (make-socket Addr "NN_PULL") )
+(de pull-bind (Addr Domain)
+  (make-socket Addr "NN_PULL" NIL Domain) )
 
-(de push-connect (Addr)
-  (make-socket Addr "NN_PUSH") )
+(de push-connect (Addr Domain)
+  (make-socket Addr "NN_PUSH" NIL Domain) )
 
 
 # public generic
