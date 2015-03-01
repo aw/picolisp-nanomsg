@@ -156,10 +156,10 @@
 
 [de msg-recv (Sock Dontwait)
   (let Result (nn-recv Sock '(`MSG_MAX_SIZE B . `MSG_MAX_SIZE) MSG_MAX_SIZE (non-blocking-io Dontwait) )
-      (unless (exit-with-error-maybe Dontwait Result)
+    (unless (exit-with-error-maybe Dontwait Result)
       (pack (mapcar char (head (car Result) (cdr Result)))) ]
 
 [de msg-send (Sock Msg Dontwait)
   (let Result (nn-send Sock Msg (size Msg) (non-blocking-io Dontwait) )
-    (exit-with-error-maybe Dontwait Result) ]
-
+    (unless (exit-with-error-maybe Dontwait Result)
+      Result ]
