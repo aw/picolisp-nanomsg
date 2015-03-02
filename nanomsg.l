@@ -128,6 +128,7 @@
                 ((= Type "NN_REQ") (nn-connect Sock Addr))
                 ((= Type "NN_PUB") (nn-bind Sock Addr))
                 ((= Type "NN_SUB") (nn-connect Sock Addr))
+                ((= Type "NN_BUS")  (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
                 ((= Type "NN_PAIR") (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
                 ((= Type "NN_PULL") (nn-bind Sock Addr))
                 ((= Type "NN_PUSH") (nn-connect Sock Addr))
@@ -169,6 +170,14 @@
 
 (de unsubscribe (Sock Topic)
   (sub-unsub Sock Topic "NN_SUB_UNSUBSCRIBE") )
+
+
+# public BUS
+(de bus-bind (Addr Domain)
+  (make-socket Addr "NN_BUS" "BIND" Domain) )
+
+(de bus-connect (Addr Domain)
+  (make-socket Addr "NN_BUS" NIL Domain) )
 
 
 # public PAIR

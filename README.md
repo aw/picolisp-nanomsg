@@ -6,13 +6,14 @@
 
   * `REQ/REP`
   * `PUB/SUB`
+  * `BUS`
   * `PAIR`
   * `PUSH/PULL (PIPELINE)`
   * `SURVEY`
 
 # Version
 
-**v0.5.9** (uses Nanomsg _v0.5_)
+**v0.5.10** (uses Nanomsg _v0.5_)
 
 # Requirements
 
@@ -125,6 +126,40 @@ pil +
   (pub-bind "tcp://127.0.0.1:5560")
   (while T (msg-send (car Sockpair) "test Hello World!"))
   (end-sock Sockpair) )
+```
+
+# Example (BUS)
+
+## Server
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(symbols 'nanomsg)
+(unless (fork)
+  (let Sockpair
+    (bus-connect "tcp://127.0.0.1:5560")
+    (prinl (msg-recv (car Sockpair)))
+    (end-sock Sockpair) )
+  (bye) )
+
+# => Hello World!
+```
+
+## Client
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(symbols 'nanomsg)
+(unless (fork)
+  (let Sockpair
+    (bus-bind "tcp://127.0.0.1:5560")
+    (msg-send (car Sockpair) "Hello World!")
+    (end-sock Sockpair) )
+  (bye) )
 ```
 
 # Example (PAIR)
@@ -250,10 +285,6 @@ Usage example:
 A fixed amount of memory is allocated for each receive buffer. The default setting is `8192` Bytes (8 KiB).
 
 This can be changed with the environment variable `NANOMSG_MAX_SIZE`. You can also overwrite the `MSG_MAX_SIZE` global constant at runtime.
-
-# TODO:
-
-  * Implement missing protocol (bus)
 
 # Contributing
 
