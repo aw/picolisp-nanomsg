@@ -11,20 +11,34 @@
   *Nanomsg "lib/libnanomsg.so" )
 
 # ffi-bindings
-(de nn-socket (Domain Protocol)
-  (native `*Nanomsg "nn_socket" 'I (symbol-val Domain) (symbol-val Protocol)) )
+[de nn-socket (Domain Protocol)
+  (native `*Nanomsg "nn_socket" 'I
+                                (symbol-val Domain)
+                                (symbol-val Protocol) ]
 
 (de nn-close (Sock)
   (native `*Nanomsg "nn_close" 'I Sock) )
 
-(de nn-setsockopt (Sock Level Option Optval Length)
-  (native `*Nanomsg "nn_setsockopt" 'I Sock (symbol-val Level) (symbol-val Option) Optval Length) )
+[de nn-setsockopt (Sock Level Option Optval Length)
+  (native `*Nanomsg "nn_setsockopt" 'I
+                                    Sock
+                                    (symbol-val Level)
+                                    (symbol-val Option)
+                                    Optval
+                                    Length ]
 
 # Set Length to NIL and nn_getsockopt will automatically calculate the correct size
 # returns the result of the call in 'car', value of &buf in 'cdr'
-(de nn-getsockopt (Sock Level Option &buf Length)
+[de nn-getsockopt (Sock Level Option &buf Length)
   (use Buf
-    (cons (native `*Nanomsg "nn_getsockopt" 'I Sock (symbol-val Level) (symbol-val Option) (list 'Buf &buf . 0) Length) Buf) ) )
+    (cons
+      (native `*Nanomsg "nn_getsockopt" 'I
+                                        Sock
+                                        (symbol-val Level)
+                                        (symbol-val Option)
+                                        (list 'Buf &buf . 0)
+                                        Length )
+      Buf ]
 
 (de nn-bind (Sock Addr)
   (native `*Nanomsg "nn_bind" 'I Sock Addr) )
@@ -39,9 +53,15 @@
   (native `*Nanomsg "nn_send" 'I Sock Msg Length Flags) )
 
 # returns the number of bytes in 'car', msg in 'cdr'
-(de nn-recv (Sock &buf Length Flags)
+[de nn-recv (Sock &buf Length Flags)
   (use Buf
-    (cons (native `*Nanomsg "nn_recv" 'I Sock (list 'Buf &buf . 0) Length Flags) Buf) ) )
+    (cons
+      (native `*Nanomsg "nn_recv" 'I
+                                  Sock
+                                  (list 'Buf &buf . 0)
+                                  Length
+                                  Flags )
+      Buf ]
 
 (de nn-errno ()
   (native `*Nanomsg "nn_errno" 'I) )
@@ -53,9 +73,14 @@
   (native `*Nanomsg "nn_symbol" 'S Index &value) )
 
 # returns the number of 'nn_pollfds' structures in 'car', results in 'cdr'
-(de nn-poll (&fds Nfds Timeout)
+[de nn-poll (&fds Nfds Timeout)
   (use Fds
-    (cons (native `*Nanomsg "nn_poll" 'I (list 'Fds &fds) Nfds Timeout) Fds) ) )
+    (cons
+      (native `*Nanomsg "nn_poll" 'I
+                                  (list 'Fds &fds)
+                                  Nfds
+                                  Timeout )
+      Fds ]
 
 (de nn-device (Sock1 Sock2)
   (native `*Nanomsg "nn_device" 'I Sock1 Sock2) )
@@ -63,8 +88,15 @@
 # WARNING: only polls 1 file descriptor specified by Sockfd
 #          Level-triggered (single-threaded) only (i.e: does not support EPOLLET|EPOLLONESHOT)
 # returns the number of 'nn_pollfds' structures (0 or 1)
-(de nn-poll-lt-1 (Sockfd Nfds Timeout)
-  (native `*Nanomsg "nn_poll" 'I (list 'NIL (8 (B B B B I)) (0 . 2) (0 . 2) (- Sockfd)) Nfds Timeout) )
+[de nn-poll-lt-1 (Sockfd Nfds Timeout)
+  (native `*Nanomsg "nn_poll" 'I
+                              (list 'NIL
+                                    (8 (B B B B I))
+                                    (0 . 2)
+                                    (0 . 2)
+                                    (- Sockfd) )
+                              Nfds
+                              Timeout ]
 
 # internal
 [setq NN_Symbols
