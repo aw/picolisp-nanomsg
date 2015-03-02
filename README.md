@@ -59,14 +59,15 @@ All functions are publicly accessible and namespaced with `(symbols 'nanomsg)` (
 pil +
 (load "nanomsg.l")
 
+(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (nanomsg~rep-bind "tcp://127.0.0.1:5560")
+    (rep-bind "tcp://127.0.0.1:5560")
 
-    (prinl (nanomsg~msg-recv (car Sockpair)))
-    (nanomsg~msg-send (car Sockpair) "Yep I can see it!" T) # non-blocking
+    (prinl (msg-recv (car Sockpair)))
+    (msg-send (car Sockpair) "Yep I can see it!" T) # non-blocking
 
-    (nanomsg~end-sock Sockpair) )
+    (end-sock Sockpair) )
 
   (bye) )
 
@@ -79,12 +80,13 @@ pil +
 pil +
 (load "nanomsg.l")
 
+(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (nanomsg~req-connect "tcp://127.0.0.1:5560")
-    (nanomsg~msg-send (car Sockpair) "Can you see this?")
-    (prinl (nanomsg~msg-recv (car Sockpair)))
-    (nanomsg~end-sock Sockpair) )
+    (req-connect "tcp://127.0.0.1:5560")
+    (msg-send (car Sockpair) "Can you see this?")
+    (prinl (msg-recv (car Sockpair)))
+    (end-sock Sockpair) )
   (bye) )
 
 # => Yep I can see it!
@@ -98,12 +100,13 @@ pil +
 pil +
 (load "nanomsg.lo")
 
+(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (nanomsg~sub-connect "tcp://127.0.0.1:5560")
-    (nanomsg~subscribe (car Sockpair) "test")
-    (while T (prinl "RECEIVED: " (nanomsg~msg-recv (car Sockpair))) (wait 1000 (nanomsg~unsubscribe 0 "test")))
-    (nanomsg~end-sock Sockpair) )
+    (sub-connect "tcp://127.0.0.1:5560")
+    (subscribe (car Sockpair) "test")
+    (while T (prinl "RECEIVED: " (msg-recv (car Sockpair))) (wait 1000 (unsubscribe 0 "test")))
+    (end-sock Sockpair) )
   (bye) )
 
 # => RECEIVED: test Hello World!
@@ -116,9 +119,9 @@ pil +
 (load "nanomsg.l")
 
 (let Sockpair
-  (nanomsg~pub-bind "tcp://127.0.0.1:5560")
-  (while T (nanomsg~msg-send (car Sockpair) "test Hello World!"))
-  (nanomsg~end-sock Sockpair) )
+  (pub-bind "tcp://127.0.0.1:5560")
+  (while T (msg-send (car Sockpair) "test Hello World!"))
+  (end-sock Sockpair) )
 ```
 
 # Example (PAIR)
@@ -129,11 +132,12 @@ pil +
 pil +
 (load "nanomsg.l")
 
+(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (nanomsg~pair-connect "tcp://127.0.0.1:5560")
-    (prinl (nanomsg~msg-recv (car Sockpair)))
-    (nanomsg~end-sock Sockpair) )
+    (pair-connect "tcp://127.0.0.1:5560")
+    (prinl (msg-recv (car Sockpair)))
+    (end-sock Sockpair) )
   (bye) )
 
 # => Hello World!
@@ -145,11 +149,12 @@ pil +
 pil +
 (load "nanomsg.l")
 
+(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (nanomsg~pair-bind "tcp://127.0.0.1:5560")
-    (prinl (nanomsg~msg-send (car Sockpair) "Hello World!"))
-    (nanomsg~end-sock Sockpair) )
+    (pair-bind "tcp://127.0.0.1:5560")
+    (prinl (msg-send (car Sockpair) "Hello World!"))
+    (end-sock Sockpair) )
   (bye) )
 ```
 
@@ -161,11 +166,12 @@ pil +
 pil +
 (load "nanomsg.l")
 
+(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (nanomsg~pull-bind "tcp://127.0.0.1:5560")
-    (prinl (nanomsg~msg-recv (car Sockpair)))
-    (nanomsg~end-sock Sockpair) )
+    (pull-bind "tcp://127.0.0.1:5560")
+    (prinl (msg-recv (car Sockpair)))
+    (end-sock Sockpair) )
   (bye) )
 
 # => Hello Pipeline
@@ -177,11 +183,12 @@ pil +
 pil +
 (load "nanomsg.l")
 
+(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (nanomsg~push-connect "tcp://127.0.0.1:5560")
-    (prinl (nanomsg~msg-send (car Sockpair) "Hello Pipeline"))
-    (nanomsg~end-sock Sockpair) )
+    (push-connect "tcp://127.0.0.1:5560")
+    (prinl (msg-send (car Sockpair) "Hello Pipeline"))
+    (end-sock Sockpair) )
   (bye) )
 ```
 
