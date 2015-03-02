@@ -87,7 +87,8 @@
         ((= -1 Result) (exit-with-error)) ]
 
 [de make-socket (Addr Type Flag Domain)
-  (let Sock (nn-socket (if Domain Domain "AF_SP") Type)
+  (default Domain "AF_SP")
+  (let Sock (nn-socket Domain Type)
     (if (= -1 Sock)
         (exit-with-error)
         (let Endpoint
