@@ -48,6 +48,8 @@ All functions are publicly accessible and namespaced with `(symbols 'nanomsg)` (
   * `msg-send`: send a message (blocking/non-blocking)
   * `subscribe`: subscribe to a `PUB/SUB` topic
   * `unsubscribe`: unsubscribe from a `PUB/SUB` topic
+  * `bus-bind`: bind to a `BUS` socket (inproc, ipc, tcp)
+  * `bus-connect`: connect to a `BUS` socket (inproc, ipc, tcp)
   * `pair-bind`: bind to a `PAIR` socket (inproc, ipc, tcp)
   * `pair-connect`: connect to a `PAIR` socket (inproc, ipc, tcp)
   * `pull-bind`: bind to a `PULL` socket (inproc, ipc, tcp)
