@@ -130,7 +130,9 @@
                 ((= Type "NN_SUB") (nn-connect Sock Addr))
                 ((= Type "NN_PAIR") (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
                 ((= Type "NN_PULL") (nn-bind Sock Addr))
-                ((= Type "NN_PUSH") (nn-connect Sock Addr)) )
+                ((= Type "NN_PUSH") (nn-connect Sock Addr))
+                ((= Type "NN_SURVEYOR")   (nn-bind Sock Addr))
+                ((= Type "NN_RESPONDENT") (nn-connect Sock Addr)) )
           (cond ((not Endpoint)  (exit-with-error))
                 ((= -1 Endpoint) (exit-with-error)) )
           (cons Sock Endpoint) ]
@@ -183,6 +185,14 @@
 
 (de push-connect (Addr Domain)
   (make-socket Addr "NN_PUSH" NIL Domain) )
+
+
+# public SURVEY
+(de survey-bind (Addr Domain)
+  (make-socket Addr "NN_SURVEYOR" NIL Domain) )
+
+(de respond-connect (Addr Domain)
+  (make-socket Addr "NN_RESPONDENT" NIL Domain) )
 
 
 # public generic

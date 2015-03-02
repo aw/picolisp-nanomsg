@@ -8,10 +8,11 @@
   * `PUB/SUB`
   * `PAIR`
   * `PUSH/PULL (PIPELINE)`
+  * `SURVEY`
 
 # Version
 
-**v0.5.8** (uses Nanomsg _v0.5_)
+**v0.5.9** (uses Nanomsg _v0.5_)
 
 # Requirements
 
@@ -50,6 +51,8 @@ All functions are publicly accessible and namespaced with `(symbols 'nanomsg)` (
   * `pair-connect`: connect to a `PAIR` socket (inproc, ipc, tcp)
   * `pull-bind`: bind to a `PULL` socket (inproc, ipc, tcp)
   * `push-connect`: connect to a `PUSH` socket (inproc, ipc, tcp)
+  * `survey-bind`: bind to a `SURVEY` socket (inproc, ipc, tcp)
+  * `respond-connect`: connect to a `SURVEY` socket (inproc, ipc, tcp)
 
 # Example (REQ/REP)
 
@@ -192,6 +195,43 @@ pil +
   (bye) )
 ```
 
+# Example (SURVEY)
+
+## Server
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(symbols 'nanomsg)
+(unless (fork)
+  (let Sockpair (survey-bind "tcp://127.0.0.1:5560")
+    (msg-send (car Sockpair) "Knock knock.")
+    (prinl (msg-recv (car Sockpair)))
+    (end-sock Sockpair) )
+  (bye) )
+
+# => Who's there?
+```
+
+## Client
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(symbols 'nanomsg)
+(unless (fork)
+  (let Sockpair
+    (respond-connect "tcp://127.0.0.1:5560")
+    (prinl (msg-recv (car Sockpair)))
+    (msg-send (car Sockpair) "Who's there?")
+    (end-sock Sockpair) )
+  (bye) )
+
+# => Knock knock.
+```
+
 # Non-blocking I/O
 
 Some situations require non-blocking I/O. You can call `msg-recv` or `msg-send` with a last argument `T` to enable non-blocking mode. Be aware `NIL` will be returned if `EAGAIN` is received during a non-blocking call. You need to manually poll/loop over the socket in this situation.
@@ -213,7 +253,7 @@ This can be changed with the environment variable `NANOMSG_MAX_SIZE`. You can al
 
 # TODO:
 
-  * Implement missing protocols (survey, bus)
+  * Implement missing protocol (bus)
 
 # Contributing
 
