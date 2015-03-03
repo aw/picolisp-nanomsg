@@ -278,7 +278,7 @@ The [pack](http://software-lab.de/doc/refP.html#pack) function will remove all N
 
 > **Note:** What this means is it receives the 8K buffer which contains a bunch of zeros at the end (assuming you didn't fill the buffer), it maps over the list, sets the zeros to NIL, packs it and you end up with a nice friendly string.
 
-This might also be a huge hack, but I thought it was cool and function. Very open to suggestions on how to improve it.
+This might also be a huge hack, but I thought it was cool and functional. Very open to suggestions on how to improve it.
 
 # The end
 
