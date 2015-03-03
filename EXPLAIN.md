@@ -102,13 +102,13 @@ The [cons](http://software-lab.de/doc/refC.html#cons) is there because we want t
 The attentive would notice I used `]` in places as opposed to parens `)`. This is known as a [super parens](http://software-lab.de/doc/ref.html#macro-io) (the name is awesome!). It essentially closes all your parens with just one square bracket.
 
 ```lisp
-(use Buf (cons (1 2 3) (4 5 6] # I think this is ugly, but useful
+(de my-func (Arg1) (cons (1 2 3) (4 5 6] # I think this is ugly, but useful
 ```
 
 My personal convention is to use a super parens at the end of a multi-line expression.
 
 ```lisp
-[use Buf
+[de my-func (Arg1)
   (let Buf (cons (1 2 3)
                  (4 5 6) ] # better
 ```
@@ -117,10 +117,9 @@ Sometimes it's nice to use square brackets to clearly define the start and end o
 
 ```lisp
 (de my-func (Arg1 Arg2)
-  [use Buf
-    (let  Buf (cons (1 2 3)
-                   (4 5 6)
-          (when (something) (do-something-else)) ]
+  [let  Buf (cons (1 2 3)
+                  (4 5 6)
+        (when (something) (do-something-else)) ]
   (cleanup-everything) )
 ```
 
