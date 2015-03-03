@@ -13,13 +13,17 @@
 
 # Version
 
-**v0.5.10** (uses Nanomsg _v0.5_)
+**v0.5.11** (uses Nanomsg _v0.5_)
 
 # Requirements
 
   * PicoLisp 64-bit v3.1.9+
   * Git
   * UNIX/Linux development/build tools (gcc, make/gmake, etc..)
+
+# Explanation
+
+To learn more about PicoLisp and this Nanomsg library, please read the [EXPLAIN.md](EXPLAIN.md) document.
 
 # Getting started
 

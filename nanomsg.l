@@ -118,22 +118,19 @@
         T )
         ((= -1 Result) (exit-with-error)) ]
 
+[de get-endpoint @
+  (cond ((and (member (arg 3) '("NN_REP" "NN_PUB" "NN_PULL" "NN_SURVEYOR"))   (pass nn-bind)))
+        ((and (member (arg 3) '("NN_REQ" "NN_SUB" "NN_PUSH" "NN_RESPONDENT")) (pass nn-connect)))
+        ((and (member (arg 3) '("NN_BUS" "NN_PAIR"))  (if (= (arg 4) "BIND")
+                                                          (pass nn-bind)
+                                                          (pass nn-connect) ]
+
 [de make-socket (Addr Type Flag Domain)
   (default Domain "AF_SP")
   (let Sock (nn-socket Domain Type)
     (if (= -1 Sock)
         (exit-with-error)
-        (let Endpoint
-          (cond ((= Type "NN_REP") (nn-bind Sock Addr))
-                ((= Type "NN_REQ") (nn-connect Sock Addr))
-                ((= Type "NN_PUB") (nn-bind Sock Addr))
-                ((= Type "NN_SUB") (nn-connect Sock Addr))
-                ((= Type "NN_BUS")  (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
-                ((= Type "NN_PAIR") (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
-                ((= Type "NN_PULL") (nn-bind Sock Addr))
-                ((= Type "NN_PUSH") (nn-connect Sock Addr))
-                ((= Type "NN_SURVEYOR")   (nn-bind Sock Addr))
-                ((= Type "NN_RESPONDENT") (nn-connect Sock Addr)) )
+        (let Endpoint (get-endpoint Sock Addr Type Flag)
           (cond ((not Endpoint)  (exit-with-error))
                 ((= -1 Endpoint) (exit-with-error)) )
           (cons Sock Endpoint) ]
