@@ -134,7 +134,7 @@ The _Structure_ argument (a C pointer) is a list which must follow a very specif
 
 There are much more details available in the [native](http://software-lab.de/doc/refN.html#native) documentation.
 
-We could have replaced `&buf` with this:
+We could have replaced the above with this:
 
 ```lisp
 '(Buf (8192 B . 8192) . 0)
