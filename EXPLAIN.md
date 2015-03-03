@@ -32,7 +32,7 @@ PicoLisp allows you to define namespaces for your functions, using [symbols](htt
 
 Here, we create a namespace called `nanomsg` which is a copy of the `pico` (default) namespace.
 
-Outside of this library, you can call functions by prefixing the title (`~`):
+Outside of this library, you can call functions by prefixing the tilde (`~`):
 
 ```lisp
 (nanomsg~nn-errno)
@@ -41,7 +41,7 @@ Outside of this library, you can call functions by prefixing the title (`~`):
 Or you can switch namespace by declaring it first:
 
 ```lisp
-(symbols `nanomsg)
+(symbols 'nanomsg)
 
 (nn-errno)
 ```
