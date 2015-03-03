@@ -225,7 +225,7 @@ There might be a better way to do this.
 
 ## 3. public
 
-We've defined quite a few public functions which can be called from outside the library. Nanomsg doesn't provide these, so we made them in order to make your life easier. Instead of interacting directly the the `native` function calls, you can use a simple _public function_ and move on with your life.
+We've defined quite a few public functions which can be called from outside the library. Nanomsg doesn't provide these, so we made them in order to make your life easier. Instead of interacting directly with the `native` function calls, you can use a simple _public function_ and move on with your life.
 
 I'll only explain the `msg-recv` function, since it does some pretty cool stuff.
 
@@ -263,7 +263,7 @@ For example:
 -> (104 101 108 108 111 0 0 8 0 0 0 0)
 ```
 
-Here we fetched the first `8` elements of the list.
+Here we fetched the first `12` elements of the list.
 
 If you didn't know, [char](http://software-lab.de/doc/refC.html#char) will return a Unicode character when you pass a Number as the argument.
 
