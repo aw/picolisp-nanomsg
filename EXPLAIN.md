@@ -267,7 +267,7 @@ Here we fetched the first `12` elements of the list.
 
 If you didn't know, [char](http://software-lab.de/doc/refC.html#char) will return a Unicode character when you pass a Number as the argument.
 
-The use of [mapcar](http://software-lab.de/doc/refM.html#mapcar) is to loop over the list, with the `char` function -- essentially calling `char` on every element in the list.
+The use of [mapcar](http://software-lab.de/doc/refM.html#mapcar) is to iterate over the list, with the `char` function -- essentially calling `char` on every element in the list.
 
 The [pack](http://software-lab.de/doc/refP.html#pack) function will remove all NIL values from the list. If you try to `(char 0)` you'll see it returns NIL.
 
