@@ -14,9 +14,9 @@ If you haven't already, then you should check out the [README](README.md) to get
 
 The `nanomsg.l` file is split into 3 major sections:
 
-	1. `ffi-bindings`: These are 1-1 function mappings with the Nanomsg C library.
-	2. `internal`: Functions which you should not need to use unless implementing a new 1-1 mapping or public function.
-	3. `public`: Functions which can be called by your application, mostly wrappers around `internal` and `ffi-bindings`.
+1. `ffi-bindings`: These are 1-1 function mappings with the Nanomsg C library.
+2. `internal`: Functions which you should not need to use unless implementing a new 1-1 mapping or public function.
+3. `public`: Functions which can be called by your application, mostly wrappers around `internal` and `ffi-bindings`.
 
 ## Start of the file
 
@@ -86,7 +86,7 @@ I'll only go into detail of `nn-getsockopt`, since it seems to cover most aspect
                                         Sock
                                         (symbol-val Level)
                                         (symbol-val Option)
-                                        (list 'Buf &buf . 0)
+                                        (cons 'Buf &buf 0)
                                         Length )
       Buf ]
 ```
@@ -95,7 +95,7 @@ You'll quickly notice one of the arguments is named `&buf`. In fact this should 
 
 The second line: `(use Buf` is something really lovely. The [use](http://software-lab.de/doc/refU.html#use) function allows you to _contain_ a variable which could become global otherwise. In the `nn-getsockopt` function, the Buf variable would have been global if it weren't for `(use`.
 
-The [cons](http://software-lab.de/doc/refC.html#cons) is there because we want to return the result of the `native` call as the `car`, and the `Buf` in the `cdr`.
+The first [cons](http://software-lab.de/doc/refC.html#cons) is there because we want to return the result of the `native` call as the `car`, and the `Buf` in the `cdr`.
 
 #### Square brackets
 
@@ -157,9 +157,9 @@ The 4th is the tricky one. It's a Structure.
 
 The _Structure_ argument (a C pointer) is a list which must follow a very specific format:
 
-	* a variable as the `car`. In our case we call it `Buf`. This variable will receive the result set in the pointer (also, potentially a structure).
-	* a cons pair which will be sent to the C function.
-	* An (optional) initialization value for the rest of the structure.
+* a variable as the `car`. In our case we call it `Buf`. This variable will receive the result set in the pointer (also, potentially a structure).
+* a cons pair which will be sent to the C function.
+* An (optional) initialization value for the rest of the structure.
 
 There are much more details available in the [native](http://software-lab.de/doc/refN.html#native) documentation.
 

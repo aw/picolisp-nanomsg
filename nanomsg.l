@@ -1,9 +1,14 @@
-# Copyright (c) 2015 Alexander Williams, Unscramble <license@unscramble.jp>
-# MIT License
-#
-# Nanomsg ffi-binding for PicoLisp
-
 (symbols 'nanomsg 'pico)
+
+[setq MODULE_INFO
+  '(("name"       "nanomsg")
+    ("version"    "0.5.12")
+    ("summary"    "Nanomsg ffi-binding for PicoLisp")
+    ("source"     "https://github.com/aw/picolisp-nanomsg.git")
+    ("author"     "Alexander Williams")
+    ("license"    "MIT")
+    ("copyright"  "(c) 2015 Alexander Williams, Unscramble <license@unscramble.jp>")
+    ("install"    "build.sh") ]
 
 (setq
   MSG_MAX_SIZE (if (sys "NANOMSG_MAX_SIZE") (format @) 8192) # 8KB should be enough
@@ -36,7 +41,7 @@
                                         Sock
                                         (symbol-val Level)
                                         (symbol-val Option)
-                                        (list 'Buf &buf . 0)
+                                        (cons 'Buf &buf 0)
                                         Length )
       Buf ]
 
@@ -58,7 +63,7 @@
     (cons
       (native `*Nanomsg "nn_recv" 'I
                                   Sock
-                                  (list 'Buf &buf . 0)
+                                  (cons 'Buf &buf 0)
                                   Length
                                   Flags )
       Buf ]
@@ -118,19 +123,22 @@
         T )
         ((= -1 Result) (exit-with-error)) ]
 
-[de get-endpoint @
-  (cond ((and (member (arg 3) '("NN_REP" "NN_PUB" "NN_PULL" "NN_SURVEYOR"))   (pass nn-bind)))
-        ((and (member (arg 3) '("NN_REQ" "NN_SUB" "NN_PUSH" "NN_RESPONDENT")) (pass nn-connect)))
-        ((and (member (arg 3) '("NN_BUS" "NN_PAIR"))  (if (= (arg 4) "BIND")
-                                                          (pass nn-bind)
-                                                          (pass nn-connect) ]
-
 [de make-socket (Addr Type Flag Domain)
   (default Domain "AF_SP")
   (let Sock (nn-socket Domain Type)
     (if (= -1 Sock)
         (exit-with-error)
-        (let Endpoint (get-endpoint Sock Addr Type Flag)
+        (let Endpoint
+          (cond ((= Type "NN_REP") (nn-bind Sock Addr))
+                ((= Type "NN_REQ") (nn-connect Sock Addr))
+                ((= Type "NN_PUB") (nn-bind Sock Addr))
+                ((= Type "NN_SUB") (nn-connect Sock Addr))
+                ((= Type "NN_BUS")  (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
+                ((= Type "NN_PAIR") (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
+                ((= Type "NN_PULL") (nn-bind Sock Addr))
+                ((= Type "NN_PUSH") (nn-connect Sock Addr))
+                ((= Type "NN_SURVEYOR")   (nn-bind Sock Addr))
+                ((= Type "NN_RESPONDENT") (nn-connect Sock Addr)) )
           (cond ((not Endpoint)  (exit-with-error))
                 ((= -1 Endpoint) (exit-with-error)) )
           (cons Sock Endpoint) ]
