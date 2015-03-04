@@ -152,7 +152,7 @@ The first three are Integers. We have an internal function called `symbol-val` w
 The 4th is the tricky one. It's a Structure.
 
 ```lisp
-(list 'Buf &buf . 0)
+(cons 'Buf &buf 0)
 ```
 
 The _Structure_ argument (a C pointer) is a list which must follow a very specific format:
@@ -166,7 +166,7 @@ There are much more details available in the [native](http://software-lab.de/doc
 We could have replaced the above with this:
 
 ```lisp
-'(Buf (8192 B . 8192) . 0)
+(cons 'Buf (8192 B . 8192) 0)
 ```
 
 This would automatically create a buffer (in memory) of `8192 Bytes` (set to 0), and expect a result of `8192 Bytes` to be returned. Of course, all values which aren't filled in the result will be set to `0`.
