@@ -9,12 +9,13 @@ set -e
 git submodule init
 git submodule update
 
-pushd vendor/nanomsg
+cd vendor/nanomsg
   ./autogen.sh
   ./configure --enable-shared
   make
-popd
+cd -
 
-pushd lib
+cd lib
+  rm -f libnanomsg.so
   ln -s ../vendor/nanomsg/.libs/libnanomsg.so libnanomsg.so
-popd
+cd -
