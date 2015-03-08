@@ -2,7 +2,7 @@
 
 [setq MODULE_INFO
   '(("name"       "nanomsg")
-    ("version"    "0.5.12")
+    ("version"    "0.5.14")
     ("summary"    "Nanomsg ffi-binding for PicoLisp")
     ("source"     "https://github.com/aw/picolisp-nanomsg.git")
     ("author"     "Alexander Williams")
@@ -104,14 +104,16 @@
                               Timeout ]
 
 # internal
-[setq NN_Symbols
+[de fetch-symbols ()
   (let (Index -1 P)
     (make
       (while (nn-symbol (inc 'Index) '(P (4 . I)))
         (link (cons @ P)) ]
 
+(setq *NN_Symbols (fetch-symbols))
+
 (de symbol-val (Symbol)
-  (cdr (assoc Symbol NN_Symbols)) )
+  (cdr (assoc Symbol *NN_Symbols)) )
 
 (de exit-with-error ()
   (let Error (nn-strerror (nn-errno)) (prinl "ERROR: " Error) (bye 1)) )

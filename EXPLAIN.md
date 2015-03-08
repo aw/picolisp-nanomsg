@@ -177,17 +177,19 @@ This would automatically create a buffer (in memory) of `8192 Bytes` (set to 0),
 
 I mentioned earlier the existence of a magical `nn-symbol` function. We use this to fetch all the C constants, and store them in an association list (key/value pairs).
 
-### NN_Symbols
+### *NN_Symbols
 
 ```lisp
-[setq NN_Symbols
+[de fetch-symbols ()
   (let (Index -1 P)
     (make
       (while (nn-symbol (inc 'Index) '(P (4 . I)))
         (link (cons @ P)) ]
+
+(setq *NN_Symbols (fetch-symbols))
 ```
 
-This `NN_Symbols` internal global variable (I know, I know.. I don't follow naming conventions..) is created at runtime. It sets the local `Index` variable to `-1`, and the local `P` variable to `NIL` (no value = NIL).
+This `*NN_Symbols` internal global variable is created at runtime. It sets the local `Index` variable to `-1`, and the local `P` variable to `NIL` (no value = NIL).
 
 It then uses [make](http://software-lab.de/doc/refM.html#make) and [link](http://software-lab.de/doc/refL.html#link) to generate a list from the result of the [while](http://software-lab.de/doc/refW.html#while) loop.
 
@@ -199,9 +201,9 @@ We create a `cons` pair using the [@ result](http://software-lab.de/doc/ref.html
 
 > **Note:** In English, this means `P` will contain a 4-byte Integer (value) and `@` will contain the constant's name.
 
-If the `nn-symbol` call returns `NIL`, then we've reached the end of the list of constants, so the `while` loop exits, and our `NN_Symbols` variable is fully set:
+If the `nn-symbol` call returns `NIL`, then we've reached the end of the list of constants, so the `while` loop exits, and our `*NN_Symbols` variable is fully set:
 
-Here is a truncated `NN_Symbols` list from nanomsg 0.5-beta:
+Here is a truncated `*NN_Symbols` list from nanomsg 0.5-beta:
 
 ```lisp
 
@@ -216,7 +218,7 @@ This function is quite simple. It fetches the `cdr` (the value) of the constant 
 
 ```lisp
 (de symbol-val (Symbol)
-  (cdr (assoc Symbol NN_Symbols)) )
+  (cdr (assoc Symbol *NN_Symbols)) )
 ```
 
 ### exit-with-error
