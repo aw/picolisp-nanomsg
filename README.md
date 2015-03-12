@@ -1,8 +1,10 @@
 # PicoLisp-Nanomsg FFI Binding
 
+[![GitHub release](https://img.shields.io/github/tag/aw/picolisp-nanomsg-blue.svg)](https://github.com/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/[deps] Nanomsg-v0.5-ff69b4.svg)](https://github.com/nanomsg/nanomsg)
+
 [Nanomsg](http://nanomsg.org/index.html) FFI binding for [PicoLisp](http://picolisp.com/).
 
-**WARNING:** This binding, like Nanomsg, is in beta and supports the following protocols:
+The following protocols are supported:
 
   * `REQ/REP`
   * `PUB/SUB`
@@ -10,10 +12,6 @@
   * `PAIR`
   * `PUSH/PULL (PIPELINE)`
   * `SURVEY`
-
-# Version
-
-**v0.5.14** (uses Nanomsg _v0.5_)
 
 # Requirements
 
@@ -60,6 +58,23 @@ All functions are publicly accessible and namespaced with `(symbols 'nanomsg)` (
   * `push-connect`: connect to a `PUSH` socket (inproc, ipc, tcp)
   * `survey-bind`: bind to a `SURVEY` socket (inproc, ipc, tcp)
   * `respond-connect`: connect to a `SURVEY` socket (inproc, ipc, tcp)
+
+## Error handling
+
+When an error occurs, `'InternalError` is thrown, along with the error (error type in `car`, message in `cdr`). The error will also be returned by the `(catch)` statement.
+
+```lisp
+pil +
+(load "nanomsg.l")
+
+(symbols 'nanomsg)
+(let Error
+  (catch 'InternalError
+    (rep-bind "tcpz://127.0.0.1:5560")
+    (prinl "you shouldn't see this") ) (println Error) )
+
+-> (NanomsgError . "Protocol not supported")
+```
 
 # Example (REQ/REP)
 

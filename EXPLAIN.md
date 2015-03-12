@@ -223,12 +223,14 @@ This function is quite simple. It fetches the `cdr` (the value) of the constant 
 
 ### exit-with-error
 
-There's nothing special about this function. I simply wanted to highlight the [bye 1](http://software-lab.de/doc/refB.html#bye) call, which exits the application with exit code 1. Good to know.
+There's nothing special about this function. I simply wanted to highlight the [throw](http://software-lab.de/doc/refT.html#throw) call, which stops the execution and returns a cons pair (error):
 
 ```lisp
 (de exit-with-error ()
-  (let Error (nn-strerror (nn-errno)) (prinl "ERROR: " Error) (bye 1)) )
+  (throw 'InternalError (cons 'NanomsgError (nn-strerror (nn-errno))) ) )
 ```
+
+This can be caught with `(catch 'InternalError`. The return value is a list which will contain `'NanomsgError` in the `car`, and a String in the `cdr`.
 
 ### make-socket
 

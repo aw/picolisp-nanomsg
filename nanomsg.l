@@ -2,7 +2,7 @@
 
 [setq MODULE_INFO
   '(("name"       "nanomsg")
-    ("version"    "0.5.14")
+    ("version"    "0.5.15")
     ("summary"    "Nanomsg ffi-binding for PicoLisp")
     ("source"     "https://github.com/aw/picolisp-nanomsg.git")
     ("author"     "Alexander Williams")
@@ -116,7 +116,7 @@
   (cdr (assoc Symbol *NN_Symbols)) )
 
 (de exit-with-error ()
-  (let Error (nn-strerror (nn-errno)) (prinl "ERROR: " Error) (bye 1)) )
+  (throw 'InternalError (cons 'NanomsgError (nn-strerror (nn-errno))) ) )
 
 [de exit-with-error-maybe (Dontwait Result)
   (cond ((and (bool Dontwait)
@@ -142,16 +142,16 @@
                 ((= Type "NN_SURVEYOR")   (nn-bind Sock Addr))
                 ((= Type "NN_RESPONDENT") (nn-connect Sock Addr)) )
           (cond ((not Endpoint)  (exit-with-error))
-                ((= -1 Endpoint) (exit-with-error)) )
-          (cons Sock Endpoint) ]
+                ((= -1 Endpoint) (exit-with-error))
+                (T (cons Sock Endpoint)) ]
 
 [de sub-unsub (Sock Topic Type)
   (let Result
     (cond ((= Type "NN_SUB_SUBSCRIBE")   (nn-setsockopt Sock "NN_SUB" Type Topic (size Topic)))
           ((= Type "NN_SUB_UNSUBSCRIBE") (nn-setsockopt Sock "NN_SUB" Type Topic (size Topic))) )
     (cond ((not Result)  (exit-with-error))
-          ((= -1 Result) (exit-with-error)) )
-    Result ]
+          ((= -1 Result) (exit-with-error))
+          (T Result) ]
 
 (de non-blocking-io (Dontwait)
    (when (bool Dontwait) (symbol-val "NN_DONTWAIT")) )
