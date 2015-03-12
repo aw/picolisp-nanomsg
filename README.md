@@ -61,7 +61,7 @@ All functions are publicly accessible and namespaced with `(symbols 'nanomsg)` (
 
 ## Error handling
 
-When an error occurs, `'InternalError` is thrown, along with the error (error type in `car`, message in `cdr`). The error will also be returned by the `(catch)` statement.
+When an error occurs, `'InternalError` is thrown, along with the error (error type in `car`, message in `cdr`). The error will also be returned by the `(catch)` expression. Ensure your `(catch)` ends with `NIL`.
 
 ```lisp
 pil +
@@ -71,8 +71,9 @@ pil +
 (let Error
   (catch 'InternalError
     (rep-bind "tcpz://127.0.0.1:5560")
-    (prinl "you shouldn't see this") ) (println Error) )
+    (prinl "you shouldn't see this") NIL)
 
+  (when Error (println @)) )
 -> (NanomsgError . "Protocol not supported")
 ```
 
