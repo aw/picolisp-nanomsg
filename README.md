@@ -1,6 +1,6 @@
 # PicoLisp-Nanomsg FFI Binding
 
-[![GitHub release](https://img.shields.io/github/tag/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/[deps] Nanomsg-v0.5-ff69b4.svg)](https://github.com/nanomsg/nanomsg)
+[![GitHub release](https://img.shields.io/github/tag/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/[deps] Nanomsg-0.5-beta-ff69b4.svg)](https://github.com/nanomsg/nanomsg)
 
 [Nanomsg](http://nanomsg.org/index.html) FFI binding for [PicoLisp](http://picolisp.com/).
 
