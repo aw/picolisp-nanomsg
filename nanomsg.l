@@ -2,7 +2,7 @@
 
 [setq MODULE_INFO
   '(("name"       "nanomsg")
-    ("version"    "0.5.15")
+    ("version"    "0.5.16")
     ("summary"    "Nanomsg ffi-binding for PicoLisp")
     ("source"     "https://github.com/aw/picolisp-nanomsg.git")
     ("author"     "Alexander Williams")
@@ -13,7 +13,7 @@
 (setq
   MSG_MAX_SIZE (if (sys "NANOMSG_MAX_SIZE") (format @) 8192) # 8KB should be enough
 
-  *Nanomsg "lib/libnanomsg.so" )
+  *Nanomsg (pack (car (file)) "lib/libnanomsg.so") )
 
 # ffi-bindings
 [de nn-socket (Domain Protocol)
