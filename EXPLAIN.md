@@ -65,7 +65,7 @@ This uses the [sys](http://software-lab.de/doc/refS.html#sys) function to read a
 Next:
 
 ```lisp
-(setq *Nanomsg "lib/libnanomsg.so" )
+(setq *Nanomsg (pack (car (file)) "lib/libnanomsg.so"))
 ```
 
 Here we assign the name of the native C (shared) library (`libnanomsg.so`) to a global variable `*Nanomsg`. It makes code a bit cleaner, particularly when dealing with native C libraries.
