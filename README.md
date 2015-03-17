@@ -6,12 +6,12 @@
 
 The following protocols are supported:
 
-  * `REQ/REP`
-  * `PUB/SUB`
-  * `BUS`
-  * `PAIR`
-  * `PUSH/PULL (PIPELINE)`
-  * `SURVEY`
+  1. [REQ/REP](#example-reqrep)
+  2. [PUB/SUB](#example-pubsub)
+  3. [BUS](#example-bus)
+  4. [PAIR](#example-pair)
+  5. [PUSH/PULL (PIPELINE)](#example-pushpull---pipeline)
+  6. [SURVEY](#example-survey)
 
 # Requirements
 
