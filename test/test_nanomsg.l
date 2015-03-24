@@ -102,6 +102,24 @@
       (end-sock Sockpair)
       Result ]
 
+[de test-send-recv ()
+  # Fork the sender and let it block until sent
+  (unless (fork)
+    (let Sockpair
+      (pair-bind "tcp://127.0.0.1:5561")
+      (msg-send (car Sockpair) "Hello World!")
+      (end-sock Sockpair) )
+    (bye) )
+
+  # Receive the message
+  (let (Sockpair (pair-connect "tcp://127.0.0.1:5561")
+        Result   (msg-recv (car Sockpair)))
+    (end-sock Sockpair)
+
+    (unit~assert-equal  "Hello World!"
+                        Result
+                        "Successfully send/receive a message using PAIR protocol" ]
+
 [unit~execute
   '(unit~assert-throws  'InternalError
                         '(NanomsgError . "Protocol not supported")
@@ -119,4 +137,5 @@
   '(test-pull-bind)
   '(test-push-connect)
   '(test-survey-bind)
-  '(test-respond-connect) ]
+  '(test-respond-connect)
+  '(test-send-recv) ]

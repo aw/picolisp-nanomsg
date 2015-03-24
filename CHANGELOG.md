@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.20 (2014-03-24)
+
+  * Add test for sending/receiving messages
+
 ## 0.5.19 (2014-03-24)
 
   * Swap order of module.l loading
