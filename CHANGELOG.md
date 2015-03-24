@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.19 (2014-03-24)
+
+  * Swap order of module.l loading
+
 ## 0.5.18 (2014-03-24)
 
   * Don't forget to load module.l

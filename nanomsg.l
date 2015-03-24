@@ -6,12 +6,12 @@
 
 (symbols 'nanomsg 'pico)
 
-(load (pack (car (file)) "module.l"))
-
 (local MODULE_INFO MSG_MAX_SIZE *Nanomsg *NN_Symbols)
 (local nn-socket nn-close nn-setsockopt nn-getsockopt nn-bind nn-connect nn-shutdown nn-send nn-recv)
 (local nn-errno nn-strerror nn-symbol nn-poll nn-device nn-poll-lt-1 fetch-symbols symbol-val)
 (local exit-with-error exit-with-error-maybe make-socket sub-unsub non-blocking-io)
+
+(load (pack (car (file)) "module.l"))
 
 (setq
   MSG_MAX_SIZE (if (sys "NANOMSG_MAX_SIZE") (format @) 8192) # 8KB should be enough
