@@ -1,8 +1,8 @@
-# PicoLisp-Nanomsg FFI Binding
+# Nanomsg FFI bindings for PicoLisp
 
-[![GitHub release](https://img.shields.io/github/release/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/%5Bdeps%5D%20Nanomsg-0.5--beta-ff69b4.svg)](https://github.com/nanomsg/nanomsg)
+[![GitHub release](https://img.shields.io/github/release/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Build Status](https://travis-ci.org/aw/picolisp-nanomsg.svg?branch=master)](https://travis-ci.org/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/%5Bdeps%5D%20Nanomsg-0.5--beta-ff69b4.svg)](https://github.com/nanomsg/nanomsg)
 
-[Nanomsg](http://nanomsg.org/index.html) FFI binding for [PicoLisp](http://picolisp.com/).
+[Nanomsg](http://nanomsg.org/index.html) FFI bindings for [PicoLisp](http://picolisp.com/).
 
 The following protocols are supported:
 
@@ -31,15 +31,21 @@ This binding relies on the _Official Nanomsg C Library_, compiled as a shared li
   2. Include `nanomsg.l` in your project
   3. Try the example below
 
-## Linking and Paths
+### Linking and Paths
 
 Once compiled, the shared library is symlinked in `lib/libnanomsg.so` pointing to `vendor/nanomsg/.libs/libnanomsg.so`.
 
 The `nanomsg.l` file searches for `lib/libnanomsg.so`, relative to its current directory.
 
+### Updating
+
+This library uses git submodules, type this keep everything updated:
+
+    ./update.sh
+
 # Usage
 
-All functions are publicly accessible and namespaced with `(symbols 'nanomsg)` (or the prefix: `nanomsg~`), but only the following are necessary:
+Only the following functions are exported publicly, and namespaced with `(symbols 'nanomsg)` (or the prefix: `nanomsg~`):
 
   * `rep-bind`: bind a `REP` socket (inproc, ipc, tcp)
   * `req-connect`: connect to a `REQ` socket (inproc, ipc, tcp)
@@ -58,6 +64,8 @@ All functions are publicly accessible and namespaced with `(symbols 'nanomsg)` (
   * `push-connect`: connect to a `PUSH` socket (inproc, ipc, tcp)
   * `survey-bind`: bind to a `SURVEY` socket (inproc, ipc, tcp)
   * `respond-connect`: connect to a `SURVEY` socket (inproc, ipc, tcp)
+
+> **Note:** These functions are not namespace [local symbols](http://software-lab.de/doc/refL.html#local), which means they would redefine symbols with the same name in the `'pico` namespace.
 
 ## Error handling
 
@@ -124,7 +132,7 @@ pil +
 
 ```lisp
 pil +
-(load "nanomsg.lo")
+(load "nanomsg.l")
 
 (symbols 'nanomsg)
 (unless (fork)
@@ -254,6 +262,9 @@ pil +
 
 # Example (SURVEY)
 
+> **Note:** The _Survey_ protocol in Nanomsg is buggy, it's possible for this not to
+work as expected.
+
 ## Server
 
 ```lisp
@@ -307,6 +318,12 @@ Usage example:
 A fixed amount of memory is allocated for each receive buffer. The default setting is `8192` Bytes (8 KiB).
 
 This can be changed with the environment variable `NANOMSG_MAX_SIZE`. You can also overwrite the `MSG_MAX_SIZE` global constant at runtime.
+
+# Testing
+
+This library now comes with full [unit tests](https://github.com/aw/picolisp-unit). To run the tests, run:
+
+    ./test.l
 
 # Contributing
 

@@ -1,14 +1,15 @@
+# nanomsg.l
+#
+# The MIT License (MIT)
+#
+# Copyright (c) 2015 Alexander Williams, Unscramble <license@unscramble.jp>
+
 (symbols 'nanomsg 'pico)
 
-[setq MODULE_INFO
-  '(("name"       "nanomsg")
-    ("version"    "0.5.16")
-    ("summary"    "Nanomsg ffi-binding for PicoLisp")
-    ("source"     "https://github.com/aw/picolisp-nanomsg.git")
-    ("author"     "Alexander Williams")
-    ("license"    "MIT")
-    ("copyright"  "(c) 2015 Alexander Williams, Unscramble <license@unscramble.jp>")
-    ("install"    "build.sh") ]
+(local MODULE_INFO MSG_MAX_SIZE *Nanomsg *NN_Symbols)
+(local nn-socket nn-close nn-setsockopt nn-getsockopt nn-bind nn-connect nn-shutdown nn-send nn-recv)
+(local nn-errno nn-strerror nn-symbol nn-poll nn-device nn-poll-lt-1 fetch-symbols symbol-val)
+(local exit-with-error exit-with-error-maybe make-socket sub-unsub non-blocking-io)
 
 (setq
   MSG_MAX_SIZE (if (sys "NANOMSG_MAX_SIZE") (format @) 8192) # 8KB should be enough
@@ -115,21 +116,23 @@
 (de symbol-val (Symbol)
   (cdr (assoc Symbol *NN_Symbols)) )
 
-(de exit-with-error ()
+(de exit-with-error (Sock Endpoint)
+  (when (and Endpoint (ge0 Endpoint)) (nn-shutdown Sock Endpoint))
+  (when Sock (nn-close Sock))
   (throw 'InternalError (cons 'NanomsgError (nn-strerror (nn-errno))) ) )
 
-[de exit-with-error-maybe (Dontwait Result)
+[de exit-with-error-maybe (Dontwait Result Sock)
   (cond ((and (bool Dontwait)
               (= -1 Result)
               (= (nn-errno) (symbol-val "EAGAIN")) )
         T )
-        ((= -1 Result) (exit-with-error)) ]
+        ((= -1 Result) (exit-with-error Sock)) ]
 
 [de make-socket (Addr Type Flag Domain)
   (default Domain "AF_SP")
   (let Sock (nn-socket Domain Type)
     (if (= -1 Sock)
-        (exit-with-error)
+        (exit-with-error Sock)
         (let Endpoint
           (cond ((= Type "NN_REP") (nn-bind Sock Addr))
                 ((= Type "NN_REQ") (nn-connect Sock Addr))
@@ -141,16 +144,16 @@
                 ((= Type "NN_PUSH") (nn-connect Sock Addr))
                 ((= Type "NN_SURVEYOR")   (nn-bind Sock Addr))
                 ((= Type "NN_RESPONDENT") (nn-connect Sock Addr)) )
-          (cond ((not Endpoint)  (exit-with-error))
-                ((= -1 Endpoint) (exit-with-error))
+          (cond ((not Endpoint)  (exit-with-error Sock))
+                ((= -1 Endpoint) (exit-with-error Sock Endpoint))
                 (T (cons Sock Endpoint)) ]
 
 [de sub-unsub (Sock Topic Type)
   (let Result
     (cond ((= Type "NN_SUB_SUBSCRIBE")   (nn-setsockopt Sock "NN_SUB" Type Topic (size Topic)))
           ((= Type "NN_SUB_UNSUBSCRIBE") (nn-setsockopt Sock "NN_SUB" Type Topic (size Topic))) )
-    (cond ((not Result)  (exit-with-error))
-          ((= -1 Result) (exit-with-error))
+    (cond ((not Result)  (exit-with-error Sock))
+          ((= -1 Result) (exit-with-error Sock))
           (T Result) ]
 
 (de non-blocking-io (Dontwait)
@@ -218,10 +221,10 @@
 
 [de msg-recv (Sock Dontwait)
   (let Result (nn-recv Sock '(`MSG_MAX_SIZE B . `MSG_MAX_SIZE) MSG_MAX_SIZE (non-blocking-io Dontwait) )
-    (unless (exit-with-error-maybe Dontwait Result)
+    (unless (exit-with-error-maybe Dontwait Result Sock)
       (pack (mapcar char (head (car Result) (cdr Result)))) ]
 
 [de msg-send (Sock Msg Dontwait)
   (let Result (nn-send Sock Msg (size Msg) (non-blocking-io Dontwait) )
-    (unless (exit-with-error-maybe Dontwait Result)
+    (unless (exit-with-error-maybe Dontwait Result Sock)
       Result ]

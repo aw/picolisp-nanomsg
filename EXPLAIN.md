@@ -226,7 +226,9 @@ This function is quite simple. It fetches the `cdr` (the value) of the constant 
 There's nothing special about this function. I simply wanted to highlight the [throw](http://software-lab.de/doc/refT.html#throw) call, which stops the execution and returns a cons pair (error):
 
 ```lisp
-(de exit-with-error ()
+(de exit-with-error (Sock Endpoint)
+  (when (and Endpoint (ge0 Endpoint)) (nn-shutdown Sock Endpoint))
+  (when Sock (nn-close Sock))
   (throw 'InternalError (cons 'NanomsgError (nn-strerror (nn-errno))) ) )
 ```
 
@@ -269,7 +271,7 @@ This function can be called in blocking or non-blocking mode. It will listen on 
 ```lisp
 [de msg-recv (Sock Dontwait)
   (let Result (nn-recv Sock '(`MSG_MAX_SIZE B . `MSG_MAX_SIZE) MSG_MAX_SIZE (non-blocking-io Dontwait) )
-    (unless (exit-with-error-maybe Dontwait Result)
+    (unless (exit-with-error-maybe Dontwait Result Sock)
       (pack (mapcar char (head (car Result) (cdr Result)))) ]
 ```
 
