@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.18 (2014-03-24)
+
+  * Don't forget to load module.l
+
 ## 0.5.17 (2015-03-24)
 
   * Add test-suite for the SP protocols
