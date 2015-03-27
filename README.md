@@ -152,6 +152,7 @@ pil +
 pil +
 (load "nanomsg.l")
 
+(symbols 'nanomsg)
 (let Sockpair
   (pub-bind "tcp://127.0.0.1:5560")
   (while T (msg-send (car Sockpair) "test Hello World!"))
