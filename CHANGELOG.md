@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.21 (2014-04-01)
+
+  * Update to picolisp-unit v0.5.2
+
 ## 0.5.20 (2014-03-24)
 
   * Add test for sending/receiving messages
