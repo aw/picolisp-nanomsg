@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.22 (2014-04-07)
+
+  * Update to picolisp-unit v0.6.0
+  * Ignore dirty submodules
+
 ## 0.5.21 (2014-04-01)
 
   * Update to picolisp-unit v0.5.2
