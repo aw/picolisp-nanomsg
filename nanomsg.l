@@ -9,7 +9,7 @@
 (local MODULE_INFO MSG_MAX_SIZE *Nanomsg *NN_Symbols)
 (local nn-socket nn-close nn-setsockopt nn-getsockopt nn-bind nn-connect nn-shutdown nn-send nn-recv)
 (local nn-errno nn-strerror nn-symbol nn-poll nn-device nn-poll-lt-1 fetch-symbols symbol-val)
-(local exit-with-error exit-with-error-maybe make-socket sub-unsub non-blocking-io)
+(local exit-with-error exit-with-error-maybe make-socket make-endpoint check-endpoint sub-unsub non-blocking-io)
 
 (load (pack (car (file)) "module.l"))
 
@@ -135,20 +135,25 @@
   (let Sock (nn-socket Domain Type)
     (if (= -1 Sock)
         (exit-with-error Sock)
-        (let Endpoint
-          (cond ((= Type "NN_REP") (nn-bind Sock Addr))
-                ((= Type "NN_REQ") (nn-connect Sock Addr))
-                ((= Type "NN_PUB") (nn-bind Sock Addr))
-                ((= Type "NN_SUB") (nn-connect Sock Addr))
-                ((= Type "NN_BUS")  (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
-                ((= Type "NN_PAIR") (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
-                ((= Type "NN_PULL") (nn-bind Sock Addr))
-                ((= Type "NN_PUSH") (nn-connect Sock Addr))
-                ((= Type "NN_SURVEYOR")   (nn-bind Sock Addr))
-                ((= Type "NN_RESPONDENT") (nn-connect Sock Addr)) )
-          (cond ((not Endpoint)  (exit-with-error Sock))
-                ((= -1 Endpoint) (exit-with-error Sock Endpoint))
-                (T (cons Sock Endpoint)) ]
+        (let Endpoint (make-endpoint Addr Type Flag Sock)
+          (check-endpoint Sock Endpoint) ]
+
+[de make-endpoint (Addr Type Flag Sock)
+  (cond ((= Type "NN_REP")        (nn-bind Sock Addr))
+        ((= Type "NN_REQ")        (nn-connect Sock Addr))
+        ((= Type "NN_PUB")        (nn-bind Sock Addr))
+        ((= Type "NN_SUB")        (nn-connect Sock Addr))
+        ((= Type "NN_BUS")        (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
+        ((= Type "NN_PAIR")       (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
+        ((= Type "NN_PULL")       (nn-bind Sock Addr))
+        ((= Type "NN_PUSH")       (nn-connect Sock Addr))
+        ((= Type "NN_SURVEYOR")   (nn-bind Sock Addr))
+        ((= Type "NN_RESPONDENT") (nn-connect Sock Addr)) ]
+
+[de check-endpoint (Sock Endpoint)
+  (cond ((not Endpoint)  (exit-with-error Sock))
+        ((= -1 Endpoint) (exit-with-error Sock Endpoint))
+        (T (cons Sock Endpoint)) ]
 
 [de sub-unsub (Sock Topic Type)
   (let Result

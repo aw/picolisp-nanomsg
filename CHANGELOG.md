@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.23 (2014-04-08)
+
+  * Split the 'make-socket' function to allow pooled connections
+  * Ensure travis tests with the latest version of PicoLisp
+
 ## 0.5.22 (2014-04-07)
 
   * Update to picolisp-unit v0.6.0
