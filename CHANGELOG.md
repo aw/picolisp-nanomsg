@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.24 (2014-04-14)
+
+  * Update to picolisp-unit v0.6.1
+  * Run travis-ci tests in a docker container
+
 ## 0.5.23 (2014-04-08)
 
   * Split the 'make-socket' function to allow pooled connections
