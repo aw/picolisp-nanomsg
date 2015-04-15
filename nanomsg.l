@@ -9,7 +9,8 @@
 (local MODULE_INFO MSG_MAX_SIZE *Nanomsg *NN_Symbols)
 (local nn-socket nn-close nn-setsockopt nn-getsockopt nn-bind nn-connect nn-shutdown nn-send nn-recv)
 (local nn-errno nn-strerror nn-symbol nn-poll nn-device nn-poll-lt-1 fetch-symbols symbol-val)
-(local exit-with-error exit-with-error-maybe make-socket make-endpoint check-endpoint sub-unsub non-blocking-io)
+(local exit-with-error exit-with-error-maybe create-socket make-socket make-endpoint check-endpoint)
+(local sub-unsub non-blocking-io)
 
 (load (pack (car (file)) "module.l"))
 
@@ -131,12 +132,17 @@
         ((= -1 Result) (exit-with-error Sock)) ]
 
 [de make-socket (Addr Type Flag Domain)
+  (let Sock (create-socket Type Domain)
+    (let Endpoint (make-endpoint Addr Type Flag Sock)
+      (check-endpoint Sock Endpoint) ]
+
+[de create-socket (Type Domain)
   (default Domain "AF_SP")
-  (let Sock (nn-socket Domain Type)
-    (if (= -1 Sock)
-        (exit-with-error Sock)
-        (let Endpoint (make-endpoint Addr Type Flag Sock)
-          (check-endpoint Sock Endpoint) ]
+  (prog1
+    (nn-socket Domain Type)
+    (if (= -1 @)
+        (exit-with-error @)
+        @ ]
 
 [de make-endpoint (Addr Type Flag Sock)
   (cond ((= Type "NN_REP")        (nn-bind Sock Addr))

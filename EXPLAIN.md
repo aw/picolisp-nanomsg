@@ -234,12 +234,12 @@ There's nothing special about this function. I simply wanted to highlight the [t
 
 This can be caught with `(catch 'InternalError`. The return value is a list which will contain `'NanomsgError` in the `car`, and a String in the `cdr`.
 
-### make-socket
+### create-socket
 
-I won't go into detail about the `make-socket` internal function, but I was pleased to discover the [default](http://software-lab.de/doc/refD.html#default) function, which assigns a default value to a variable.
+I won't go into detail about the `create-socket` internal function, but I was pleased to discover the [default](http://software-lab.de/doc/refD.html#default) function, which assigns a default value to a variable.
 
 ```lisp
-[de make-socket (Addr Type Flag Domain)
+[de create-socket (Type Domain)
   (default Domain "AF_SP")
 ```
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.25 (2014-04-15)
+
+  * Split 'make-socket' for more flexibility
+  * Update EXPLAIN.md
+
 ## 0.5.24 (2014-04-14)
 
   * Update to picolisp-unit v0.6.1
