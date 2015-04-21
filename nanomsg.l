@@ -145,16 +145,16 @@
         @ ]
 
 [de make-endpoint (Addr Type Flag Sock)
-  (cond ((= Type "NN_REP")        (nn-bind Sock Addr))
-        ((= Type "NN_REQ")        (nn-connect Sock Addr))
-        ((= Type "NN_PUB")        (nn-bind Sock Addr))
-        ((= Type "NN_SUB")        (nn-connect Sock Addr))
-        ((= Type "NN_BUS")        (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
-        ((= Type "NN_PAIR")       (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
-        ((= Type "NN_PULL")       (nn-bind Sock Addr))
-        ((= Type "NN_PUSH")       (nn-connect Sock Addr))
-        ((= Type "NN_SURVEYOR")   (nn-bind Sock Addr))
-        ((= Type "NN_RESPONDENT") (nn-connect Sock Addr)) ]
+  (case Type  ("NN_REP"        (nn-bind Sock Addr))
+              ("NN_REQ"        (nn-connect Sock Addr))
+              ("NN_PUB"        (nn-bind Sock Addr))
+              ("NN_SUB"        (nn-connect Sock Addr))
+              ("NN_BUS"        (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
+              ("NN_PAIR"       (if (= Flag "BIND") (nn-bind Sock Addr) (nn-connect Sock Addr)))
+              ("NN_PULL"       (nn-bind Sock Addr))
+              ("NN_PUSH"       (nn-connect Sock Addr))
+              ("NN_SURVEYOR"   (nn-bind Sock Addr))
+              ("NN_RESPONDENT" (nn-connect Sock Addr)) ]
 
 [de check-endpoint (Sock Endpoint)
   (cond ((not Endpoint)  (exit-with-error Sock))
