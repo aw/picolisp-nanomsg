@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.26 (2014-04-23)
+
+  * Replace (cond) with (case)
+
 ## 0.5.25 (2014-04-15)
 
   * Split 'make-socket' for more flexibility
