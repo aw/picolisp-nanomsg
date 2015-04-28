@@ -5,7 +5,7 @@ PIL_SYMLINK_DIR ?= .lib
 
 ## Edit below
 BUILD_REPO = https://github.com/nanomsg/nanomsg.git
-BUILD_DIR = $(PIL_MODULE_DIR)/neon/HEAD
+BUILD_DIR = $(PIL_MODULE_DIR)/nanomsg/HEAD
 LIB_DIR = .libs
 TARGET = libnanomsg.so
 BFLAGS = --enable-shared
