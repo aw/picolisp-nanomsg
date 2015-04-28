@@ -25,23 +25,25 @@ To learn more about PicoLisp and this Nanomsg library, please read the [EXPLAIN.
 
 # Getting started
 
-This binding relies on the _Official Nanomsg C Library_, compiled as a shared library. It is included here as a [git submodule](http://git-scm.com/book/en/v2/Git-Tools-Submodules).
+This binding relies on the _Official Nanomsg C Library_, compiled as a shared library.
 
-  1. Type `./build.sh` to pull and compile the _Official Nanomsg C Library_.
+  1. Type `make` to pull and compile the _Official Nanomsg C Library_.
   2. Include `nanomsg.l` in your project
   3. Try the example below
 
 ### Linking and Paths
 
-Once compiled, the shared library is symlinked in `lib/libnanomsg.so` pointing to `vendor/nanomsg/.libs/libnanomsg.so`.
+Once compiled, the shared library is symlinked as:
 
-The `nanomsg.l` file searches for `lib/libnanomsg.so`, relative to its current directory.
+    .lib/libnanomsg.so -> .modules/nanomsg/HEAD/src/.libs/libnanomsg.so
+
+The `nanomsg.l` file searches for `.lib/libnanomsg.so`, relative to its current directory.
 
 ### Updating
 
-This library uses git submodules, type this keep everything updated:
+To keep everything updated, type:
 
-    ./update.sh
+    git pull && make clean && make
 
 # Usage
 
@@ -322,9 +324,9 @@ This can be changed with the environment variable `NANOMSG_MAX_SIZE`. You can al
 
 # Testing
 
-This library now comes with full [unit tests](https://github.com/aw/picolisp-unit). To run the tests, run:
+This library now comes with full [unit tests](https://github.com/aw/picolisp-unit). To run the tests, type:
 
-    ./test.l
+    make check
 
 # Contributing
 

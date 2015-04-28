@@ -17,7 +17,7 @@
 (setq
   MSG_MAX_SIZE (if (sys "NANOMSG_MAX_SIZE") (format @) 8192) # 8KB should be enough
 
-  *Nanomsg (pack (car (file)) "lib/libnanomsg.so") )
+  *Nanomsg (pack (car (file)) ".lib/libnanomsg.so") )
 
 # ffi-bindings
 [de nn-socket (Domain Protocol)
