@@ -6,6 +6,7 @@ PIL_SYMLINK_DIR ?= .lib
 ## Edit below
 BUILD_REPO = https://github.com/nanomsg/nanomsg.git
 BUILD_DIR = $(PIL_MODULE_DIR)/nanomsg/HEAD
+BUILD_REF = 0.5-beta
 LIB_DIR = .libs
 TARGET = libnanomsg.so
 BFLAGS = --enable-shared
@@ -32,6 +33,7 @@ $(TEST_DIR):
 
 $(BUILD_DIR)/$(LIB_DIR)/$(TARGET):
 		cd $(BUILD_DIR) && \
+		git checkout $(BUILD_REF) && \
 		./autogen.sh && \
 		./configure $(BFLAGS) && \
 		$(COMPILE) && \
