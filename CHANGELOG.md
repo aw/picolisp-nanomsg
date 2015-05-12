@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.28 (2015-05-12)
+
+  * Specify explicit git ref for 'nanomsg' library
+
 ## 0.5.27 (2015-04-28)
 
   * Remove the need for git submodules
