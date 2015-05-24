@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.29 (2015-05-24)
+
+  * Update to picolisp-unit v0.6.2
+
 ## 0.5.28 (2015-05-12)
 
   * Specify explicit git ref for 'nanomsg' library
