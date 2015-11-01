@@ -1,6 +1,6 @@
 [de MODULE_INFO
   ("name"       "nanomsg")
-  ("version"    "0.6.0")
+  ("version"    "0.7.0")
   ("summary"    "Nanomsg ffi-binding for PicoLisp")
   ("source"     "https://github.com/aw/picolisp-nanomsg.git")
   ("author"     "Alexander Williams")

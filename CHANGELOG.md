@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0 (2015-11-01)
+
+  * Bump lib version
+
 ## 0.6.0 (2015-05-24)
 
   * Update picolisp-unit to v1.0.0
