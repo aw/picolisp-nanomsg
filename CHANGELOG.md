@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0 (2015-05-24)
+
+  * Update picolisp-unit to v1.0.0
+  * Update nanomsg to 0.7-beta
+
 ## 0.5.29 (2015-05-24)
 
   * Update to picolisp-unit v0.6.2

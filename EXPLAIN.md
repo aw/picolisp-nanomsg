@@ -203,7 +203,7 @@ We create a `cons` pair using the [@ result](http://software-lab.de/doc/ref.html
 
 If the `nn-symbol` call returns `NIL`, then we've reached the end of the list of constants, so the `while` loop exits, and our `*NN_Symbols` variable is fully set:
 
-Here is a truncated `*NN_Symbols` list from nanomsg 0.5-beta:
+Here is a truncated `*NN_Symbols` list from nanomsg 0.7-beta:
 
 ```lisp
 
