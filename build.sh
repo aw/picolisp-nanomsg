@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2015 Alexander Williams, Unscramble <license@unscramble.jp>
+# Copyright (c) 2015-2016 Alexander Williams, Unscramble <license@unscramble.jp>
 # MIT License
 #
 # For backwards compatibility

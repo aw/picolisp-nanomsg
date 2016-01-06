@@ -323,4 +323,4 @@ That's pretty much all I have to explain about the Nanomsg FFI binding. I'm very
 
 This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
 
-Copyright (c) 2015 Alexander Williams, Unscramble <license@unscramble.jp>
+Copyright (c) 2015-2016 Alexander Williams, Unscramble <license@unscramble.jp>

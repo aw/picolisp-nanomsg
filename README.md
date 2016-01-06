@@ -1,6 +1,6 @@
 # Nanomsg FFI bindings for PicoLisp
 
-[![GitHub release](https://img.shields.io/github/release/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Build Status](https://travis-ci.org/aw/picolisp-nanomsg.svg?branch=master)](https://travis-ci.org/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/%5Bdeps%5D%20Nanomsg-0.7--beta-ff69b4.svg)](https://github.com/nanomsg/nanomsg) [![Dependency](https://img.shields.io/badge/[deps] picolisp--unit-v1.0.0-ff69b4.svg)](https://github.com/aw/picolisp-unit.git)
+[![GitHub release](https://img.shields.io/github/release/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Build Status](https://travis-ci.org/aw/picolisp-nanomsg.svg?branch=master)](https://travis-ci.org/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/%5Bdeps%5D%20Nanomsg-0.8--beta-ff69b4.svg)](https://github.com/nanomsg/nanomsg) [![Dependency](https://img.shields.io/badge/[deps] picolisp--unit-v1.0.0-ff69b4.svg)](https://github.com/aw/picolisp-unit.git)
 
 [Nanomsg](http://nanomsg.org/index.html) FFI bindings for [PicoLisp](http://picolisp.com/).
 
@@ -11,7 +11,7 @@ The following protocols are supported:
   3. [BUS](#example-bus)
   4. [PAIR](#example-pair)
   5. [PUSH/PULL (PIPELINE)](#example-pushpull---pipeline)
-  6. [SURVEY](#example-survey)
+  6. [SURVEYOR/RESPONDENT](#example-survey)
 
 # Requirements
 
@@ -49,23 +49,13 @@ To keep everything updated, type:
 
 Only the following functions are exported publicly, and namespaced with `(symbols 'nanomsg)` (or the prefix: `nanomsg~`):
 
-  * `rep-bind`: bind a `REP` socket (inproc, ipc, tcp)
-  * `req-connect`: connect to a `REQ` socket (inproc, ipc, tcp)
-  * `pub-bind`: bind to a `PUB` socket (inproc, ipc, tcp)
-  * `sub-connect`: connect to a `SUB` socket (inproc, ipc, tcp)
+  * `protocol-bind`: bind a `REP, PUB, BUS, PAIR, PULL, or SURVEYOR` socket (inproc, ipc, tcp)
+  * `protocol-connect`: connect to a `REQ, SUB, BUS, PAIR, PUSH, RESPONDENT` socket (inproc, ipc, tcp)
   * `end-sock`: shutdown and close a socket
   * `msg-recv`: receive a message (blocking/non-blocking)
   * `msg-send`: send a message (blocking/non-blocking)
   * `subscribe`: subscribe to a `PUB/SUB` topic
   * `unsubscribe`: unsubscribe from a `PUB/SUB` topic
-  * `bus-bind`: bind to a `BUS` socket (inproc, ipc, tcp)
-  * `bus-connect`: connect to a `BUS` socket (inproc, ipc, tcp)
-  * `pair-bind`: bind to a `PAIR` socket (inproc, ipc, tcp)
-  * `pair-connect`: connect to a `PAIR` socket (inproc, ipc, tcp)
-  * `pull-bind`: bind to a `PULL` socket (inproc, ipc, tcp)
-  * `push-connect`: connect to a `PUSH` socket (inproc, ipc, tcp)
-  * `survey-bind`: bind to a `SURVEY` socket (inproc, ipc, tcp)
-  * `respond-connect`: connect to a `SURVEY` socket (inproc, ipc, tcp)
 
 > **Note:** These functions are not namespace [local symbols](http://software-lab.de/doc/refL.html#local), which means they would redefine symbols with the same name in the `'pico` namespace.
 
@@ -80,7 +70,7 @@ pil +
 (symbols 'nanomsg)
 (let Error
   (catch 'InternalError
-    (rep-bind "tcpz://127.0.0.1:5560")
+    (protocol-bind "REP" "tcpz://127.0.0.1:5560" "AF_SP_RAW")
     (prinl "you shouldn't see this") NIL)
 
   (when Error (println @)) )
@@ -98,7 +88,7 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (rep-bind "tcp://127.0.0.1:5560")
+    (protocol-bind "REP" "tcp://127.0.0.1:5560")
 
     (prinl (msg-recv (car Sockpair)))
     (msg-send (car Sockpair) "Yep I can see it!" T) # non-blocking
@@ -119,7 +109,7 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (req-connect "tcp://127.0.0.1:5560")
+    (protocol-connect "REQ" "tcp://127.0.0.1:5560")
     (msg-send (car Sockpair) "Can you see this?")
     (prinl (msg-recv (car Sockpair)))
     (end-sock Sockpair) )
@@ -139,7 +129,7 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (sub-connect "tcp://127.0.0.1:5560")
+    (protocol-connect "SUB" "tcp://127.0.0.1:5560")
     (subscribe (car Sockpair) "test")
     (while T (prinl "RECEIVED: " (msg-recv (car Sockpair))) (wait 1000 (unsubscribe 0 "test")))
     (end-sock Sockpair) )
@@ -156,7 +146,7 @@ pil +
 
 (symbols 'nanomsg)
 (let Sockpair
-  (pub-bind "tcp://127.0.0.1:5560")
+  (protocol-bind "PUB" "tcp://127.0.0.1:5560")
   (while T (msg-send (car Sockpair) "test Hello World!"))
   (end-sock Sockpair) )
 ```
@@ -172,7 +162,7 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (bus-connect "tcp://127.0.0.1:5560")
+    (protocol-connect "BUS" "tcp://127.0.0.1:5560")
     (prinl (msg-recv (car Sockpair)))
     (end-sock Sockpair) )
   (bye) )
@@ -189,7 +179,7 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (bus-bind "tcp://127.0.0.1:5560")
+    (protocol-bind "BUS" "tcp://127.0.0.1:5560")
     (msg-send (car Sockpair) "Hello World!")
     (end-sock Sockpair) )
   (bye) )
@@ -206,7 +196,7 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (pair-connect "tcp://127.0.0.1:5560")
+    (protocol-connect "PAIR" "tcp://127.0.0.1:5560")
     (prinl (msg-recv (car Sockpair)))
     (end-sock Sockpair) )
   (bye) )
@@ -223,7 +213,7 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (pair-bind "tcp://127.0.0.1:5560")
+    (protocol-bind "PAIR" "tcp://127.0.0.1:5560")
     (prinl (msg-send (car Sockpair) "Hello World!"))
     (end-sock Sockpair) )
   (bye) )
@@ -240,7 +230,7 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (pull-bind "tcp://127.0.0.1:5560")
+    (protocol-bind "PULL" "tcp://127.0.0.1:5560")
     (prinl (msg-recv (car Sockpair)))
     (end-sock Sockpair) )
   (bye) )
@@ -257,15 +247,15 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (push-connect "tcp://127.0.0.1:5560")
+    (protocol-connect "PUSH" "tcp://127.0.0.1:5560")
     (prinl (msg-send (car Sockpair) "Hello Pipeline"))
     (end-sock Sockpair) )
   (bye) )
 ```
 
-# Example (SURVEY)
+# Example (SURVEYOR/RESPONDENT)
 
-> **Note:** The _Survey_ protocol in Nanomsg is buggy, it's possible for this not to
+> **Note:** The _Surveyor_ protocol in Nanomsg is buggy, it's possible for this not to
 work as expected.
 
 ## Server
@@ -276,7 +266,7 @@ pil +
 
 (symbols 'nanomsg)
 (unless (fork)
-  (let Sockpair (survey-bind "tcp://127.0.0.1:5560")
+  (let Sockpair (protocol-bind "SURVEYOR" "tcp://127.0.0.1:5560")
     (msg-send (car Sockpair) "Knock knock.")
     (prinl (msg-recv (car Sockpair)))
     (end-sock Sockpair) )
@@ -294,7 +284,7 @@ pil +
 (symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
-    (respond-connect "tcp://127.0.0.1:5560")
+    (protocol-connect "RESPONDENT" "tcp://127.0.0.1:5560")
     (prinl (msg-recv (car Sockpair)))
     (msg-send (car Sockpair) "Who's there?")
     (end-sock Sockpair) )
@@ -337,4 +327,4 @@ If you want to improve this library, please make a pull-request.
 # License
 
 [MIT License](LICENSE)
-Copyright (c) 2015 Alexander Williams, Unscramble <license@unscramble.jp>
+Copyright (c) 2015-2016 Alexander Williams, Unscramble <license@unscramble.jp>

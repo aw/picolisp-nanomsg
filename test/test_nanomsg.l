@@ -120,6 +120,22 @@
                         Result
                         "Successfully send/receive a message using PAIR protocol" ]
 
+[de test-protocol-bind ()
+  (let (Sockpair  (protocol-bind "REP" "tcp://127.0.0.1:5560")
+        Result    (unit~assert-equal  '(0 . 1)
+                                      Sockpair
+                                      "Protocol REP-BIND socket is created") )
+      (end-sock Sockpair)
+      Result ]
+
+[de test-protocol-connect ()
+  (let (Sockpair  (protocol-connect "REQ" "tcp://127.0.0.1:5560")
+        Result    (unit~assert-equal  '(0 . 1)
+                                      Sockpair
+                                      "Protocol REQ-CONNECT socket is created") )
+      (end-sock Sockpair)
+      Result ]
+
 [unit~execute
   '(unit~assert-throws  'InternalError
                         '(NanomsgError . "Protocol not supported")
@@ -138,4 +154,6 @@
   '(test-push-connect)
   '(test-survey-bind)
   '(test-respond-connect)
-  '(test-send-recv) ]
+  '(test-send-recv)
+  '(test-protocol-bind)
+  '(test-protocol-connect) ]

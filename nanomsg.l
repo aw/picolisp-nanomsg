@@ -2,7 +2,7 @@
 #
 # The MIT License (MIT)
 #
-# Copyright (c) 2015 Alexander Williams, Unscramble <license@unscramble.jp>
+# Copyright (c) 2015-2016 Alexander Williams, Unscramble <license@unscramble.jp>
 
 (symbols 'nanomsg 'pico)
 
@@ -241,3 +241,9 @@
   (let Result (nn-send Sock Msg (size Msg) (non-blocking-io Dontwait) )
     (unless (exit-with-error-maybe Dontwait Result Sock)
       Result ]
+
+(de protocol-bind (Protocol Addr Domain)
+  (make-socket Addr (pack "NN_" Protocol) "BIND" Domain) )
+
+(de protocol-connect (Protocol Addr Domain)
+  (make-socket Addr (pack "NN_" Protocol) NIL Domain) )

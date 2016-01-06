@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0 (2016-01-06)
+
+  * Bump nanomsg to 0.8-beta
+  * Add new public (protocol-bind) and (protocol-connect) functions
+  * Simplify documentation and update license for 2016
+
 ## 0.7.0 (2015-11-01)
 
   * Bump lib version
