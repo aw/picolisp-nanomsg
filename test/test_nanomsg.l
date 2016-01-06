@@ -140,10 +140,6 @@
   '(unit~assert-throws  'InternalError
                         '(NanomsgError . "Protocol not supported")
                         '(rep-bind "tcpz://127.0.0.1:5560")
-                        "Throw an InternalError when trying to use an invalid transport" )
-  '(unit~assert-throws  'InternalError
-                        '(NanomsgError . "Invalid protocol")
-                        '(protocol-connect "REQ" "tcp://127.0.0.1:5560")
                         "Throw an InternalError when trying to use an invalid protocol" )
 
   '(test-rep-bind)
