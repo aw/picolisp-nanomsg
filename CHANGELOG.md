@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.2 (2016-01-06)
+
+  * Bump nanomsg to 1.1.2
+  * Remove the use of namespaces
+
 ## 0.8.0 (2016-01-06)
 
   * Bump nanomsg to 0.8-beta

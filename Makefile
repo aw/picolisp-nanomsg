@@ -6,10 +6,8 @@ PIL_SYMLINK_DIR ?= .lib
 ## Edit below
 BUILD_REPO = https://github.com/nanomsg/nanomsg.git
 BUILD_DIR = $(PIL_MODULE_DIR)/nanomsg/HEAD
-BUILD_REF = 0.8-beta
-LIB_DIR = .libs
+BUILD_REF = 1.1.2
 TARGET = libnanomsg.so
-BFLAGS = --enable-shared
 ## Edit above
 
 # Unit testing
@@ -21,7 +19,7 @@ COMPILE = make
 
 .PHONY: all clean
 
-all: $(BUILD_DIR) $(BUILD_DIR)/$(LIB_DIR)/$(TARGET) symlink
+all: $(BUILD_DIR) $(BUILD_DIR)/$(TARGET) symlink
 
 $(BUILD_DIR):
 		mkdir -p $(BUILD_DIR) && \
@@ -31,26 +29,25 @@ $(TEST_DIR):
 		mkdir -p $(TEST_DIR) && \
 		git clone $(TEST_REPO) $(TEST_DIR)
 
-$(BUILD_DIR)/$(LIB_DIR)/$(TARGET):
+$(BUILD_DIR)/$(TARGET):
 		cd $(BUILD_DIR) && \
 		git checkout $(BUILD_REF) && \
-		./autogen.sh && \
-		./configure $(BFLAGS) && \
+		./configure && \
 		$(COMPILE) && \
-		strip --strip-unneeded $(LIB_DIR)/$(TARGET)
+		strip --strip-unneeded $(TARGET)
 
 symlink:
 		mkdir -p $(PIL_SYMLINK_DIR) && \
 		cd $(PIL_SYMLINK_DIR) && \
-		ln -sf ../$(BUILD_DIR)/$(LIB_DIR)/$(TARGET) $(TARGET)
+		ln -sf ../$(BUILD_DIR)/$(TARGET) $(TARGET)
 
 check: all $(TEST_DIR) run-tests
 
 run-tests:
-		./test.l
+		PIL_NAMESPACES=false ./test.l
 
 clean:
-		cd $(BUILD_DIR)/$(LIB_DIR) && \
+		cd $(BUILD_DIR) && \
 		rm -f $(TARGET) && \
 		cd - && \
 		cd $(PIL_SYMLINK_DIR) && \

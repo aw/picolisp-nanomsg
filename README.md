@@ -1,6 +1,6 @@
 # Nanomsg FFI bindings for PicoLisp
 
-[![GitHub release](https://img.shields.io/github/release/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Build Status](https://travis-ci.org/aw/picolisp-nanomsg.svg?branch=master)](https://travis-ci.org/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/%5Bdeps%5D%20Nanomsg-0.8--beta-ff69b4.svg)](https://github.com/nanomsg/nanomsg) [![Dependency](https://img.shields.io/badge/[deps] picolisp--unit-v1.0.0-ff69b4.svg)](https://github.com/aw/picolisp-unit.git)
+[![GitHub release](https://img.shields.io/github/release/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Build Status](https://travis-ci.org/aw/picolisp-nanomsg.svg?branch=master)](https://travis-ci.org/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/%5Bdeps%5D%20Nanomsg-1.1.2-ff69b4.svg)](https://github.com/nanomsg/nanomsg) [![Dependency](https://img.shields.io/badge/[deps] picolisp--unit-v2.1.0-ff69b4.svg)](https://github.com/aw/picolisp-unit.git)
 
 [Nanomsg](http://nanomsg.org/index.html) FFI bindings for [PicoLisp](http://picolisp.com/).
 
@@ -15,7 +15,8 @@ The following protocols are supported:
 
 # Requirements
 
-  * PicoLisp 64-bit v3.1.9+
+  * PicoLisp 64-bit v17.3+
+  * Tested up to PicoLisp 64-bit v18.1.17
   * Git
   * UNIX/Linux development/build tools (gcc, make/gmake, etc..)
 
@@ -35,7 +36,7 @@ This binding relies on the _Official Nanomsg C Library_, compiled as a shared li
 
 Once compiled, the shared library is symlinked as:
 
-    .lib/libnanomsg.so -> .modules/nanomsg/HEAD/src/.libs/libnanomsg.so
+    .lib/libnanomsg.so -> .modules/nanomsg/HEAD/libnanomsg.so
 
 The `nanomsg.l` file searches for `.lib/libnanomsg.so`, relative to its current directory.
 
@@ -47,7 +48,7 @@ To keep everything updated, type:
 
 # Usage
 
-Only the following functions are exported publicly, and namespaced with `(symbols 'nanomsg)` (or the prefix: `nanomsg~`):
+Only the following functions are considered `public`:
 
   * `protocol-bind`: bind a `REP, PUB, BUS, PAIR, PULL, or SURVEYOR` socket (inproc, ipc, tcp)
   * `protocol-connect`: connect to a `REQ, SUB, BUS, PAIR, PUSH, RESPONDENT` socket (inproc, ipc, tcp)
@@ -67,7 +68,6 @@ When an error occurs, `'InternalError` is thrown, along with the error (error ty
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (let Error
   (catch 'InternalError
     (protocol-bind "REP" "tcpz://127.0.0.1:5560" "AF_SP_RAW")
@@ -85,7 +85,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-bind "REP" "tcp://127.0.0.1:5560")
@@ -106,7 +105,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-connect "REQ" "tcp://127.0.0.1:5560")
@@ -126,7 +124,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-connect "SUB" "tcp://127.0.0.1:5560")
@@ -144,7 +141,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (let Sockpair
   (protocol-bind "PUB" "tcp://127.0.0.1:5560")
   (while T (msg-send (car Sockpair) "test Hello World!"))
@@ -159,7 +155,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-connect "BUS" "tcp://127.0.0.1:5560")
@@ -176,7 +171,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-bind "BUS" "tcp://127.0.0.1:5560")
@@ -193,7 +187,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-connect "PAIR" "tcp://127.0.0.1:5560")
@@ -210,7 +203,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-bind "PAIR" "tcp://127.0.0.1:5560")
@@ -227,7 +219,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-bind "PULL" "tcp://127.0.0.1:5560")
@@ -244,7 +235,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-connect "PUSH" "tcp://127.0.0.1:5560")
@@ -264,7 +254,6 @@ work as expected.
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair (protocol-bind "SURVEYOR" "tcp://127.0.0.1:5560")
     (msg-send (car Sockpair) "Knock knock.")
@@ -281,7 +270,6 @@ pil +
 pil +
 (load "nanomsg.l")
 
-(symbols 'nanomsg)
 (unless (fork)
   (let Sockpair
     (protocol-connect "RESPONDENT" "tcp://127.0.0.1:5560")
@@ -327,4 +315,4 @@ If you want to improve this library, please make a pull-request.
 # License
 
 [MIT License](LICENSE)
-Copyright (c) 2015-2016 Alexander Williams, Unscramble <license@unscramble.jp>
+Copyright (c) 2015-2018 Alexander Williams, Unscramble <license@unscramble.jp>

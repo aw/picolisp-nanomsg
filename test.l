@@ -5,4 +5,4 @@
 (chdir "test/"
   (mapcar load (filter '((N) (sub? "test_" N)) (dir "."))) )
 
-(unit~report)
+(report)
