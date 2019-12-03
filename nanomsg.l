@@ -2,7 +2,7 @@
 #
 # The MIT License (MIT)
 #
-# Copyright (c) 2015-2018 Alexander Williams, Unscramble <license@unscramble.jp>
+# Copyright (c) 2015-2019 Alexander Williams, Unscramble <license@unscramble.jp>
 
 (setq
   MSG_MAX_SIZE (if (sys "NANOMSG_MAX_SIZE") (format @) 8192) # 8KB should be enough

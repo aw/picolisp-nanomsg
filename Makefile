@@ -6,7 +6,7 @@ PIL_SYMLINK_DIR ?= .lib
 ## Edit below
 BUILD_REPO = https://github.com/nanomsg/nanomsg.git
 BUILD_DIR = $(PIL_MODULE_DIR)/nanomsg/HEAD
-BUILD_REF = 1.1.2
+BUILD_REF = 1.1.5
 TARGET = libnanomsg.so
 ## Edit above
 

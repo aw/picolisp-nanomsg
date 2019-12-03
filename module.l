@@ -1,12 +1,12 @@
 [de MODULE_INFO
   ("name"       "nanomsg")
-  ("version"    "0.8.0")
+  ("version"    "1.1.5")
   ("summary"    "Nanomsg ffi-binding for PicoLisp")
   ("source"     "https://github.com/aw/picolisp-nanomsg.git")
   ("author"     "Alexander Williams")
   ("license"    "MIT")
-  ("copyright"  "(c) 2015-2016 Alexander Williams, Unscramble <license@unscramble.jp>")
+  ("copyright"  "(c) 2015-2019 Alexander Williams, Unscramble <license@unscramble.jp>")
   ("install"    "make")
   ("requires"
-    ("picolisp-unit"   "v1.0.0"      "https://github.com/aw/picolisp-unit.git")
-    ("nanomsg"         "0.8-beta"    "https://github.com/nanomsg/nanomsg.git") ]
+    ("picolisp-unit"   "v3.0.0"      "https://github.com/aw/picolisp-unit.git")
+    ("nanomsg"         "1.1.5"    "https://github.com/nanomsg/nanomsg.git") ]

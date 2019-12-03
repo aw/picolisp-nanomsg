@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.5 (2019-12-03)
+
+  * Bump nanomsg to 1.1.5
+
 ## 1.1.2 (2016-01-06)
 
   * Bump nanomsg to 1.1.2
