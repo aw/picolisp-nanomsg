@@ -16,7 +16,7 @@ The following protocols are supported:
 # Requirements
 
   * PicoLisp 64-bit `v17.12+`
-  * Tested up to PicoLisp `v19.11.25`, [see test runs](https://github.com/aw/picolisp-nanomsg/commit/1f881fbcea4333aca3d819b838f9397c37ba02cc/checks)
+  * Tested up to PicoLisp `v20.6.29`, [see test runs](https://github.com/aw/picolisp-nanomsg/commit/1f881fbcea4333aca3d819b838f9397c37ba02cc/checks)
   * Git
   * UNIX/Linux development/build tools (gcc, make/gmake, etc..)
 
@@ -315,4 +315,4 @@ If you want to improve this library, please make a pull-request.
 # License
 
 [MIT License](LICENSE)
-Copyright (c) 2015-2019 Alexander Williams, Unscramble <license@unscramble.jp>
+Copyright (c) 2015-2020 Alexander Williams, Unscramble <license@unscramble.jp>
