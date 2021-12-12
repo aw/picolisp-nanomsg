@@ -1,6 +1,10 @@
+# WARNING: DEPRECATED
+
+I don't use this anymore, and don't plan on maintaining it. Please use at your own risk.
+
 # Nanomsg FFI bindings for PicoLisp
 
-[![GitHub release](https://img.shields.io/github/release/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/%5Bdeps%5D%20Nanomsg-1.1.2-ff69b4.svg)](https://github.com/nanomsg/nanomsg) [![Dependency](https://img.shields.io/badge/[deps]&#32;picolisp--unit-v3.0.0-ff69b4.svg)](https://github.com/aw/picolisp-unit.git) ![Build status](https://github.com/aw/picolisp-nanomsg/workflows/CI/badge.svg?branch=master)
+[![GitHub release](https://img.shields.io/github/release/aw/picolisp-nanomsg.svg)](https://github.com/aw/picolisp-nanomsg) [![Dependency](https://img.shields.io/badge/%5Bdeps%5D%20Nanomsg-1.1.5-ff69b4.svg)](https://github.com/nanomsg/nanomsg) [![Dependency](https://img.shields.io/badge/[deps]&#32;picolisp--unit-v3.0.0-ff69b4.svg)](https://github.com/aw/picolisp-unit.git) ![Build status](https://github.com/aw/picolisp-nanomsg/workflows/CI/badge.svg?branch=master)
 
 [Nanomsg](http://nanomsg.org/index.html) FFI bindings for [PicoLisp](http://picolisp.com/).
 
@@ -16,9 +20,9 @@ The following protocols are supported:
 # Requirements
 
   * PicoLisp 64-bit `v17.12+`
-  * Tested up to PicoLisp `v20.6.29`, [see test runs](https://github.com/aw/picolisp-nanomsg/commit/1f881fbcea4333aca3d819b838f9397c37ba02cc/checks)
+  * Tested up to PicoLisp `v21`, [see test runs](https://github.com/aw/picolisp-nanomsg/commit/1f881fbcea4333aca3d819b838f9397c37ba02cc/checks)
   * Git
-  * UNIX/Linux development/build tools (gcc, make/gmake, etc..)
+  * UNIX/Linux development/build tools (gcc, make/gmake/cmake, etc..)
 
 # Explanation
 
